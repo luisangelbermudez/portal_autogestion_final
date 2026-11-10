@@ -1,0 +1,14 @@
+# Despliegue del frontend en Netlify
+[build]
+  base = "Frontend"
+  command = "npm install && npx ng build --configuration production"
+  publish = "dist/frontend/browser"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Angular es una aplicacion de una sola pagina: cualquier ruta debe cargar index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

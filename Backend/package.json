@@ -1,0 +1,35 @@
+{
+  "name": "portal-autogestion-backend",
+  "version": "1.0.0",
+  "description": "Backend Express - Portal de Autogestion de Empleados - Acegrasco S.A.",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "jest --runInBand",
+    "hash-passwords": "node scripts/hash-passwords.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.2",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.2.0",
+    "mysql2": "^3.24.2",
+    "nodemailer": "^10.4.0",
+    "pdfkit": "^0.15.2",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "jest": "^30.5.2",
+    "nodemon": "^3.1.0",
+    "supertest": "^7.3.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ]
+  }
+}

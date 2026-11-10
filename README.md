@@ -1,7 +1,6 @@
 # Portal de Autogestión de Empleados - Acegrasco S.A.
 
-Proyecto formativo SENA — Tecnología en Análisis y Desarrollo de Software (Ficha 3186635)
-Evidencias GA8-220501096-AA1-EV01 y AA1-EV02
+Proyecto final SENA — Tecnología en Análisis y Desarrollo de Software (Ficha 3186635), grupo 9. Versión 1.1 con despliegue en la nube.
 
 ## Arquitectura
 

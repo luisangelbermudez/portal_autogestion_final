@@ -1,0 +1,105 @@
+<div class="contenedor">
+
+  <!-- Tarjeta de perfil (común a ambos roles) -->
+  <div class="tarjeta-perfil">
+    <div class="avatar">
+      <svg viewBox="0 0 24 24" width="40" height="40" fill="#0F2F80"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" fill="none" stroke="#0F2F80" stroke-width="2"/></svg>
+    </div>
+    <div class="info-perfil">
+      <h3>{{ usuario?.nombre }}</h3>
+
+      <ng-container *ngIf="!authService.esAdministrador(); else infoAdmin">
+        <p>📌 Cargo: {{ empleado?.cargo }}</p>
+        <p>🪪 Cédula: {{ empleado?.cedula }}</p>
+        <p>✉️ Correo: {{ usuario?.correo }}</p>
+        <p>🏢 Área: {{ empleado?.area }}</p>
+        <p>📅 Ingreso: {{ empleado?.fecha_ingreso | date:"yyyy-MM-dd" }}</p>
+        <span class="badge activo">✅ Sesión activa</span>
+      </ng-container>
+
+      <ng-template #infoAdmin>
+        <p>🔑 Rol: Administrador del sistema</p>
+        <p>✉️ Correo: {{ usuario?.correo }}</p>
+        <span class="badge admin">🛡️ Admin</span>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Tarjetas de estadísticas -->
+  <div class="fila-stats" *ngIf="!cargando">
+    <ng-container *ngIf="!authService.esAdministrador(); else statsAdmin">
+      <div class="stat-card amarillo">
+        <div class="numero">{{ totalSolicitudes }}</div>
+        <div class="etiqueta">Total solicitudes</div>
+      </div>
+      <div class="stat-card verde">
+        <div class="numero">{{ solicitudesAtendidas }}</div>
+        <div class="etiqueta">Atendidas</div>
+      </div>
+      <div class="stat-card rojo">
+        <div class="numero">{{ solicitudesPendientes }}</div>
+        <div class="etiqueta">Pendientes</div>
+      </div>
+    </ng-container>
+
+    <ng-template #statsAdmin>
+      <div class="stat-card amarillo">
+        <div class="numero">{{ totalUsuarios }}</div>
+        <div class="etiqueta">Usuarios</div>
+      </div>
+      <div class="stat-card verde">
+        <div class="numero">{{ totalEmpleados }}</div>
+        <div class="etiqueta">Empleados</div>
+      </div>
+      <div class="stat-card rojo">
+        <div class="numero">{{ totalSolicitudesPendientesAdmin }}</div>
+        <div class="etiqueta">Solicitudes pendientes</div>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Accesos rápidos -->
+  <div class="accesos-rapidos">
+    <h3>⚡ Accesos rápidos</h3>
+    <div class="botones">
+      <ng-container *ngIf="!authService.esAdministrador(); else botonesAdmin">
+        <a routerLink="/certificados" class="boton navy">📄 Generar Certificado Laboral</a>
+        <a routerLink="/solicitudes" class="boton rojo">📁 Nueva Solicitud</a>
+        <a routerLink="/solicitudes" class="boton verde">📋 Ver Mis Solicitudes</a>
+      </ng-container>
+      <ng-template #botonesAdmin>
+        <a routerLink="/usuarios" class="boton navy">➕ Nuevo usuario</a>
+        <a routerLink="/empleados" class="boton verde">➕ Nuevo empleado</a>
+        <a routerLink="/solicitudes" class="boton rojo">📁 Ver solicitudes</a>
+        <a routerLink="/certificados" class="boton morado">📄 Mis certificados</a>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Últimas solicitudes (solo empleado) -->
+  <div class="ultimas-solicitudes" *ngIf="!authService.esAdministrador()">
+    <h3>📄 Mis últimas solicitudes</h3>
+    <table class="tabla" *ngIf="misSolicitudes.length > 0; else sinSolicitudes">
+      <thead>
+        <tr><th>Tipo</th><th>Descripción</th><th>Estado</th><th>Fecha</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of misSolicitudes">
+          <td>{{ s.tipo_solicitud }}</td>
+          <td>{{ s.descripcion }}</td>
+          <td>
+            <span class="estado" [ngClass]="{
+              'estado-aprobado': s.id_estado === 5,
+              'estado-rechazado': s.id_estado === 6,
+              'estado-pendiente': s.id_estado === 3 || s.id_estado === 4
+            }">{{ ESTADOS[s.id_estado || 3] }}</span>
+          </td>
+          <td>{{ s.fecha_creacion | date:"dd/MM/yyyy hh:mm a" }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #sinSolicitudes>
+      <p class="vacio">Aún no has enviado solicitudes.</p>
+    </ng-template>
+  </div>
+</div>

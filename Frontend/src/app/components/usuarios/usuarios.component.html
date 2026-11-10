@@ -1,0 +1,46 @@
+<div class="contenedor">
+  <h2>Gestión de Usuarios</h2>
+
+  <div *ngIf="mensaje" class="mensaje">{{ mensaje }}</div>
+
+  <form (ngSubmit)="guardar()" class="formulario">
+    <h3>{{ modoEdicion ? "Editar usuario" : "Nuevo usuario" }}</h3>
+    <input type="text" [(ngModel)]="usuarioSeleccionado.nombre" name="nombre" placeholder="Nombre completo" required />
+    <input type="email" [(ngModel)]="usuarioSeleccionado.correo" name="correo" placeholder="Correo electrónico" required />
+    <input type="password" [(ngModel)]="usuarioSeleccionado.contrasena" name="contrasena"
+           [placeholder]="modoEdicion ? 'Nueva contraseña (opcional)' : 'Contraseña'" [required]="!modoEdicion" />
+    <select [(ngModel)]="usuarioSeleccionado.idRol" name="idRol">
+      <option [value]="1">Administrador</option>
+      <option [value]="2">Empleado</option>
+    </select>
+    <select [(ngModel)]="usuarioSeleccionado.idEstado" name="idEstado">
+      <option [value]="1">Activo</option>
+      <option [value]="2">Inactivo</option>
+    </select>
+    <div class="acciones-form">
+      <button type="submit">{{ modoEdicion ? "Actualizar" : "Crear" }}</button>
+      <button type="button" *ngIf="modoEdicion" (click)="cancelar()">Cancelar</button>
+    </div>
+  </form>
+
+  <p *ngIf="cargando">Cargando usuarios...</p>
+
+  <table class="tabla" *ngIf="!cargando">
+    <thead>
+      <tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of usuarios">
+        <td>{{ u.idUsuario }}</td>
+        <td>{{ u.nombre }}</td>
+        <td>{{ u.correo }}</td>
+        <td>{{ u.idRol === 1 ? "Administrador" : "Empleado" }}</td>
+        <td>{{ u.idEstado === 1 ? "Activo" : "Inactivo" }}</td>
+        <td>
+          <button (click)="editar(u)">Editar</button>
+          <button (click)="eliminar(u.idUsuario)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

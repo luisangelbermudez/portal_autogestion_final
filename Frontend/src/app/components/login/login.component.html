@@ -1,0 +1,76 @@
+<nav class="barra-nav">
+  <span class="marca">Portal <span class="acento">Acegrasco</span></span>
+</nav>
+
+<main class="hero">
+  <div class="carrusel">
+    <div
+      class="slide"
+      *ngFor="let img of imagenes; let i = index"
+      [class.activo]="i === indiceActual"
+    >
+      <img [src]="img.src" [alt]="img.titulo" class="imagen-fondo" />
+      <div class="overlay">
+        <div class="etiqueta">{{ img.etiqueta }}</div>
+        <div class="titulo">{{ img.titulo }}</div>
+        <div class="descripcion">{{ img.descripcion }}</div>
+      </div>
+    </div>
+
+    <button type="button" class="flecha flecha-izq" (click)="anterior()" aria-label="Anterior">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button type="button" class="flecha flecha-der" (click)="siguiente()" aria-label="Siguiente">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+
+    <div class="puntos">
+      <button
+        type="button"
+        *ngFor="let img of imagenes; let i = index"
+        class="punto"
+        [class.activo]="i === indiceActual"
+        (click)="irA(i)"
+        [attr.aria-label]="'Ir a la imagen ' + (i + 1)"
+      ></button>
+    </div>
+  </div>
+
+  <aside class="panel-lateral">
+    <div class="encabezado-panel">
+      <div class="marco-logo">
+        <img class="logo" src="assets/imagenes/acegrasco.JPG" alt="Acegrasco" />
+      </div>
+      <h2>Acegrasco S.A.</h2>
+      <p>Sistema de gestión de solicitudes</p>
+    </div>
+
+    <div class="tarjeta">
+      <div class="titulo-tarjeta">Iniciar Sesión</div>
+      <div class="cuerpo-tarjeta">
+        <div class="campo">
+          <label for="correo">Correo electrónico</label>
+          <input id="correo" type="email" [(ngModel)]="correo" name="correo" placeholder="usuario@acegrasco.com" />
+        </div>
+        <div class="campo">
+          <label for="contrasena">Contraseña</label>
+          <input id="contrasena" type="password" [(ngModel)]="contrasena" name="contrasena" placeholder="********"
+                 (keyup.enter)="ingresar()" />
+        </div>
+        <div class="error" *ngIf="error">{{ error }}</div>
+        <button class="boton-primario" (click)="ingresar()" [disabled]="cargando">
+          {{ cargando ? "Ingresando..." : "Ingresar" }}
+        </button>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<footer class="pie">
+  <div class="contacto">
+    <span>(+57) 301 2952356</span>
+    <span>info&#64;acegrasco.com.co</span>
+    <span>Calle 15 #5-23, Bogotá</span>
+  </div>
+  <div class="derechos">Portal de Autogestión &copy; 2026</div>
+</footer>

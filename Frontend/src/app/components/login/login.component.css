@@ -1,0 +1,116 @@
+:host {
+  --primary: #1B4FBF;
+  --primary-light: #2E6BE6;
+  --primary-dark: #0F2F80;
+  --accent: #EF9F27;
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --text: #1a1f2e;
+  --text-muted: #5a6580;
+  display: block;
+  font-family: "DM Sans", Arial, sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+.barra-nav {
+  height: 64px;
+  background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  box-shadow: 0 2px 8px rgba(15,47,128,0.15);
+}
+.marca { color: #fff; font-weight: 700; font-size: 1.15rem; }
+.acento { color: var(--accent); }
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  min-height: calc(100vh - 64px - 64px);
+}
+
+.carrusel { position: relative; overflow: hidden; background: var(--primary-dark); }
+
+.slide {
+  position: absolute; inset: 0;
+  opacity: 0; transition: opacity 0.8s ease;
+  pointer-events: none;
+}
+.slide.activo { opacity: 1; pointer-events: auto; }
+
+.imagen-fondo { width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
+.overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 2.5rem; color: #fff;
+  background: linear-gradient(0deg, rgba(15,47,128,0.9) 0%, rgba(15,47,128,0.15) 100%);
+}
+.etiqueta { color: var(--accent); font-weight: 600; font-size: 0.85rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.03em; }
+.titulo { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; }
+.descripcion { color: rgba(255,255,255,0.88); max-width: 480px; font-size: 0.92rem; }
+
+.flecha {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(15,47,128,0.55); border: 1px solid rgba(255,255,255,0.4);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  transition: background 0.15s; z-index: 2;
+}
+.flecha:hover { background: rgba(15,47,128,0.85); }
+.flecha-izq { left: 16px; }
+.flecha-der { right: 16px; }
+
+.puntos { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 2; }
+.punto {
+  width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.4);
+  border: none; cursor: pointer; padding: 0; transition: background 0.15s, transform 0.15s;
+}
+.punto.activo { background: var(--accent); transform: scale(1.2); }
+
+.panel-lateral { background: var(--surface); padding: 2rem 1.75rem; display: flex; flex-direction: column; gap: 1.25rem; }
+.encabezado-panel { text-align: center; }
+.marco-logo {
+  width: 100%; max-width: 260px; height: 90px; margin: 0 auto 0.85rem;
+  display: flex; align-items: center; justify-content: center;
+  background: #fff; border: 1px solid rgba(27,79,191,0.15); border-radius: 8px;
+  padding: 8px; overflow: hidden;
+}
+.logo { max-width: 100%; max-height: 100%; object-fit: contain; }
+.encabezado-panel h2 { color: var(--primary-dark); font-size: 1.35rem; margin: 0.25rem 0 0.15rem; }
+.encabezado-panel p { color: var(--text-muted); font-size: 0.9rem; margin: 0; }
+
+.tarjeta { background: var(--bg); border-radius: 10px; padding: 1.25rem; border: 1px solid rgba(27,79,191,0.15); }
+.titulo-tarjeta { font-weight: 700; color: var(--primary-dark); margin-bottom: 0.75rem; }
+.campo { margin-bottom: 0.85rem; display: flex; flex-direction: column; gap: 0.3rem; }
+.campo label { font-size: 0.8rem; color: var(--text-muted); }
+.campo input {
+  padding: 0.6rem 0.75rem; border: 1px solid rgba(27,79,191,0.25);
+  border-radius: 7px; font-size: 0.9rem;
+}
+.campo input:focus { outline: none; border-color: var(--primary); }
+
+.error {
+  background: #FCEBEB; color: #A32D2D; border: 1px solid #f7c1c1;
+  border-radius: 7px; padding: 0.5rem 0.75rem; font-size: 0.82rem; margin-bottom: 0.6rem;
+}
+
+.boton-primario {
+  width: 100%; padding: 0.7rem; border: none; border-radius: 8px;
+  background: var(--primary); color: #fff; font-weight: 600; cursor: pointer;
+  transition: background 0.15s;
+}
+.boton-primario:hover:not(:disabled) { background: var(--primary-light); }
+.boton-primario:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.pie {
+  background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+  color: rgba(255,255,255,0.8);
+  padding: 1rem 2rem; display: flex; justify-content: space-between;
+  font-size: 0.8rem; flex-wrap: wrap; gap: 0.5rem;
+}
+.contacto { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+
+@media (max-width: 800px) {
+  .hero { grid-template-columns: 1fr; }
+  .carrusel { min-height: 260px; }
+}

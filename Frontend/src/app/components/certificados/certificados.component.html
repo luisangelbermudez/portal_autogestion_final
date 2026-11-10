@@ -1,0 +1,99 @@
+<div class="contenedor">
+
+  <div class="tarjeta-perfil" *ngIf="empleado">
+    <div class="banda"></div>
+    <div class="cabecera-perfil">
+      <div class="avatar">{{ iniciales }}</div>
+      <div class="titulo-perfil">
+        <h3>{{ empleado.nombre | uppercase }}</h3>
+        <p class="cargo">{{ empleado.cargo }}</p>
+      </div>
+      <div class="sello-antiguedad">
+        <span class="sello-valor">{{ antiguedad }}</span>
+        <span class="sello-etiqueta">en la compañía</span>
+      </div>
+    </div>
+
+    <div class="datos-perfil">
+      <div class="dato">
+        <span class="dato-icono">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M14 10h4M14 14h4M6.5 16c.5-1.2 1.4-2 2.5-2s2 .8 2.5 2"/></svg>
+        </span>
+        <span class="dato-texto"><span class="dato-etiqueta">Cédula</span><span class="dato-valor">{{ empleado.cedula }}</span></span>
+      </div>
+      <div class="dato">
+        <span class="dato-icono">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>
+        </span>
+        <span class="dato-texto"><span class="dato-etiqueta">Área</span><span class="dato-valor">{{ empleado.area }}</span></span>
+      </div>
+      <div class="dato">
+        <span class="dato-icono">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        </span>
+        <span class="dato-texto"><span class="dato-etiqueta">Fecha de ingreso</span><span class="dato-valor">{{ fechaIngresoTexto }}</span></span>
+      </div>
+      <div class="dato">
+        <span class="dato-icono">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </span>
+        <span class="dato-texto"><span class="dato-etiqueta">Último ingreso</span><span class="dato-valor">{{ ultimoAccesoTexto }}</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <h3>📄 Generar Certificado Laboral</h3>
+    <p class="ayuda">Selecciona el tipo de certificado y el canal de entrega:</p>
+
+    <div class="tarjetas-opciones">
+      <button
+        type="button"
+        class="tarjeta-opcion"
+        *ngFor="let op of opciones"
+        [class.seleccionada]="opcionSeleccionada.valor === op.valor"
+        [disabled]="generando"
+        (click)="seleccionar(op)"
+      >
+        <div class="icono">{{ op.icono }}</div>
+        <div class="titulo-opcion">{{ op.titulo }}</div>
+        <div class="descripcion-opcion">{{ op.descripcion }}</div>
+      </button>
+    </div>
+
+    <div class="info-detalle">
+      ℹ️ {{ opcionSeleccionada.detalle }}
+    </div>
+
+    <div *ngIf="mensaje" class="mensaje" [ngClass]="{ 'mensaje-error': tipoMensaje === 'error' }">{{ mensaje }}</div>
+
+    <h4 class="titulo-canal">Canal de entrega</h4>
+    <div class="fila-canal">
+      <button type="button" class="boton-canal pdf" [disabled]="generando" (click)="descargarPdf()">
+        ⬇️ {{ generando ? "Generando..." : "Descargar PDF" }}
+      </button>
+      <button type="button" class="boton-canal correo" [disabled]="generando" (click)="enviarPorCorreo()">
+        ✉️ {{ generando ? "Enviando..." : "Enviar por correo" }}
+      </button>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <h3>📁 Mis certificados generados</h3>
+    <table class="tabla" *ngIf="historial.length > 0; else sinCertificados">
+      <thead>
+        <tr><th>Consecutivo</th><th>Fecha</th><th>Canal</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of historial">
+          <td>CERT-{{ c.consecutivo?.toString()?.padStart(4, "0") }}</td>
+          <td>{{ c.fecha_generacion | date:"dd/MM/yyyy hh:mm a" }}</td>
+          <td>{{ c.canal_entrega === "correo" ? "✉️ Correo" : "⬇️ PDF" }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #sinCertificados>
+      <p class="vacio">Aún no has generado certificados.</p>
+    </ng-template>
+  </div>
+</div>

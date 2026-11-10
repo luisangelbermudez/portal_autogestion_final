@@ -1,0 +1,63 @@
+<div class="contenedor">
+  <h2>Gestión de Empleados</h2>
+  <div *ngIf="mensaje" class="mensaje">{{ mensaje }}</div>
+
+  <form (ngSubmit)="guardar()" class="formulario">
+    <h3>{{ modoEdicion ? "Editar empleado" : "Nuevo empleado" }}</h3>
+    <input type="number" [(ngModel)]="empleadoSeleccionado.idUsuario" name="idUsuario" placeholder="ID Usuario" required />
+    <input type="text" [(ngModel)]="empleadoSeleccionado.cedula" name="cedula" placeholder="Cédula" required />
+    <input type="text" [(ngModel)]="empleadoSeleccionado.cargo" name="cargo" placeholder="Cargo" required />
+    <input type="text" [(ngModel)]="empleadoSeleccionado.area" name="area" placeholder="Área" required />
+    <input type="date" [(ngModel)]="empleadoSeleccionado.fechaIngreso" name="fechaIngreso" required />
+    <input type="number" [(ngModel)]="empleadoSeleccionado.salario" name="salario" placeholder="Salario" />
+    <input type="number" [(ngModel)]="empleadoSeleccionado.promedioHorasExtras" name="promedioHorasExtras" placeholder="Horas extras prom." />
+    <div class="acciones-form">
+      <button type="submit">{{ modoEdicion ? "Actualizar" : "Registrar" }}</button>
+      <button type="button" *ngIf="modoEdicion" (click)="cancelar()">Cancelar</button>
+    </div>
+  </form>
+
+  <div class="carga-masiva">
+    <h3>📊 Carga masiva de empleados (Excel)</h3>
+    <p class="ayuda">
+      Sube un archivo .xlsx con las columnas: <code>nombre, correo, contrasena, cedula, cargo, area, fechaIngreso, salario, promedioHorasExtras</code>.
+      Por cada fila se crea el usuario de acceso y el empleado asociado.
+    </p>
+    <div class="fila-carga">
+      <input type="file" accept=".xlsx,.xls" (change)="seleccionarArchivo($event)" />
+      <button type="button" (click)="cargarExcel()" [disabled]="cargandoExcel || !archivoSeleccionado">
+        {{ cargandoExcel ? "Procesando..." : "Cargar Excel" }}
+      </button>
+    </div>
+
+    <div class="resultado-carga" *ngIf="resultadoCarga">
+      <p><strong>{{ resultadoCarga.mensaje }}</strong></p>
+      <ul *ngIf="resultadoCarga.errores.length > 0" class="lista-errores">
+        <li *ngFor="let err of resultadoCarga.errores">{{ err }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <p *ngIf="cargando">Cargando empleados...</p>
+
+  <table class="tabla" *ngIf="!cargando">
+    <thead>
+      <tr><th>ID</th><th>Nombre</th><th>Cédula</th><th>Cargo</th><th>Área</th><th>Ingreso</th><th>Salario</th><th>Acciones</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let e of empleados">
+        <td>{{ e.id_empleado }}</td>
+        <td>{{ e.nombre }}</td>
+        <td>{{ e.cedula }}</td>
+        <td>{{ e.cargo }}</td>
+        <td>{{ e.area }}</td>
+        <td>{{ e.fecha_ingreso | date:"yyyy-MM-dd" }}</td>
+        <td>{{ e.salario | currency:"COP":"symbol-narrow":"1.0-0" }}</td>
+        <td>
+          <button (click)="editar(e)">Editar</button>
+          <button (click)="eliminar(e.id_empleado)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

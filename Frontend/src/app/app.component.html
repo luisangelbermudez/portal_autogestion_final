@@ -1,0 +1,57 @@
+<header class="encabezado" *ngIf="mostrarNav">
+  <a routerLink="/" class="marca">
+    <span class="logo-marca">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>
+    </span>
+    <span class="texto-marca">Portal <span class="acento">Acegrasco</span></span>
+  </a>
+
+  <nav class="menu" *ngIf="authService.esAdministrador()">
+    <a routerLink="/usuarios" routerLinkActive="activo" class="enlace-nav">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+      <span>Usuarios</span>
+    </a>
+    <a routerLink="/empleados" routerLinkActive="activo" class="enlace-nav">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      <span>Empleados</span>
+    </a>
+    <a routerLink="/solicitudes" routerLinkActive="activo" class="enlace-nav">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
+      <span>Solicitudes</span>
+    </a>
+    <a routerLink="/certificados" routerLinkActive="activo" class="enlace-nav">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M8.5 12.5 7 22l5-3 5 3-1.5-9.5"/></svg>
+      <span>Certificados</span>
+    </a>
+  </nav>
+
+  <div class="zona-usuario" *ngIf="usuario">
+    <div class="chip-usuario">
+      <span class="avatar-mini">{{ iniciales }}</span>
+      <span class="datos-usuario">
+        <strong>{{ usuario.nombre }}</strong>
+        <small>{{ rol }}</small>
+      </span>
+    </div>
+    <a routerLink="/cambiar-contrasena" routerLinkActive="activo" class="boton-clave" title="Cambiar contraseña" aria-label="Cambiar contraseña">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3M17 6l3 3M14 9l2 2"/></svg>
+    </a>
+    <button type="button" class="boton-salir" (click)="cerrarSesion()">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+      <span>{{ authService.esAdministrador() ? "Salir" : "Cerrar sesión" }}</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <router-outlet />
+</main>
+
+<footer class="pie" *ngIf="mostrarNav && authService.esAdministrador()">
+  <div class="contacto">
+    <span>Portal de Autogestión Acegrasco S.A. © 2026</span>
+    <span>📞 (+57) 301 2952356</span>
+    <span>✉️ info&#64;acegrasco.com.co</span>
+    <span>📍 Calle 15 #5-23, Bogotá, Colombia</span>
+  </div>
+</footer>

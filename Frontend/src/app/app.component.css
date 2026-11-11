@@ -1,0 +1,89 @@
+.encabezado {
+  position: sticky; top: 0; z-index: 100;
+  height: 64px; padding: 0 28px; gap: 20px;
+  background: linear-gradient(90deg, #0A2266 0%, #0F2F80 40%, #1B4FBF 100%);
+  color: #fff; display: flex; justify-content: space-between; align-items: center;
+  font-family: "DM Sans", Arial, sans-serif;
+  border-bottom: 3px solid #EF9F27;
+  box-shadow: 0 4px 14px rgba(10, 34, 102, 0.28);
+}
+
+/* Marca */
+.marca { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+.logo-marca {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: linear-gradient(135deg, #F6B84A, #EF9F27); color: #0F2F80;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(239, 159, 39, 0.45);
+}
+.texto-marca { color: #EF9F27; font-weight: 800; font-size: 1.1rem; letter-spacing: 0.3px; }
+.texto-marca .acento { color: #fff; }
+
+/* Menú principal */
+.menu { display: flex; align-items: center; gap: 6px; margin: 0 auto; }
+.enlace-nav {
+  position: relative; display: flex; align-items: center; gap: 8px;
+  color: rgba(255, 255, 255, 0.82); text-decoration: none; cursor: pointer;
+  font-size: 0.9rem; font-weight: 500; padding: 9px 16px; border-radius: 999px;
+  transition: background 0.18s, color 0.18s, transform 0.18s;
+}
+.enlace-nav svg { flex-shrink: 0; opacity: 0.9; }
+.enlace-nav:hover { background: rgba(255, 255, 255, 0.13); color: #fff; transform: translateY(-1px); }
+.enlace-nav.activo {
+  background: rgba(255, 255, 255, 0.18); color: #fff; font-weight: 700;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+.enlace-nav.activo svg { color: #EF9F27; opacity: 1; }
+.enlace-nav.activo::after {
+  content: ""; position: absolute; left: 22px; right: 22px; bottom: -13px;
+  height: 3px; border-radius: 3px 3px 0 0; background: #EF9F27;
+}
+
+/* Usuario y salida */
+.zona-usuario { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.chip-usuario {
+  display: flex; align-items: center; gap: 10px;
+  padding: 4px 16px 4px 4px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.avatar-mini {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, #F6B84A, #EF9F27); color: #0F2F80;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 0.82rem; letter-spacing: 0.5px;
+}
+.datos-usuario { display: flex; flex-direction: column; line-height: 1.15; min-width: 0; }
+.datos-usuario strong { font-size: 0.84rem; font-weight: 700; white-space: nowrap; max-width: 170px; overflow: hidden; text-overflow: ellipsis; }
+.datos-usuario small { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.9px; color: #F6C46A; font-weight: 700; }
+.boton-clave {
+  width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  color: rgba(255, 255, 255, 0.85); border: 1px solid rgba(255, 255, 255, 0.25); cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+.boton-clave:hover, .boton-clave.activo { background: rgba(255, 255, 255, 0.18); color: #EF9F27; }
+.boton-salir {
+  display: flex; align-items: center; gap: 7px; cursor: pointer;
+  background: transparent; color: #ffd6d6; font-family: inherit; font-size: 0.85rem; font-weight: 600;
+  padding: 8px 16px; border-radius: 999px; border: 1px solid rgba(255, 190, 190, 0.5);
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+.boton-salir:hover { background: #D64545; border-color: #D64545; color: #fff; }
+
+.pie {
+  background: linear-gradient(90deg, #0F2F80, #1B4FBF);
+  color: rgba(255,255,255,0.85);
+  padding: 14px 24px; font-size: 0.8rem;
+}
+.contacto { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+
+@media (max-width: 1100px) {
+  .datos-usuario small { display: none; }
+}
+@media (max-width: 900px) {
+  .encabezado { padding: 0 14px; gap: 10px; }
+  .enlace-nav span, .datos-usuario, .boton-salir span, .texto-marca { display: none; }
+  .enlace-nav { padding: 9px 11px; }
+  .chip-usuario { padding: 4px; }
+  .boton-salir { padding: 8px 10px; }
+  .enlace-nav.activo::after { left: 10px; right: 10px; }
+}

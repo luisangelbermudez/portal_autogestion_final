@@ -1,0 +1,10 @@
+# Dependencias de Node en cualquier subcarpeta
+**/node_modules/
+
+# Variables de entorno y configuraciones locales
+.env
+.DS_Store
+
+# Archivos de compilación o distribución
+dist/
+build/

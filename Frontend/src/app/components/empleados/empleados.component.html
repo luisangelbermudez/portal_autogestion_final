@@ -1,0 +1,97 @@
+<div class="contenedor">
+  <h2>Gestión de Empleados</h2>
+  <div *ngIf="mensaje" class="mensaje" [class.error]="tipoMensaje === 'error'">
+    {{ mensaje }}
+    <a *ngIf="faltaUsuario" routerLink="/usuarios" class="enlace">Ir a Usuarios</a>
+  </div>
+
+  <div class="buscador">
+    <label for="busqueda">Buscar empleado por número de documento</label>
+    <div class="fila">
+      <input id="busqueda" type="text" [(ngModel)]="busqueda" name="busqueda" placeholder="Ej. 1234567890" (keyup.enter)="buscarParaEditar()" />
+      <button type="button" (click)="buscarParaEditar()">Buscar</button>
+    </div>
+  </div>
+
+  <!-- Nuevo empleado, paso 1: buscar a la persona por documento -->
+  <form *ngIf="paso === 'busqueda'" (ngSubmit)="buscarPersona()" class="formulario">
+    <h3>Nuevo empleado · Identificación</h3>
+    <p class="ayuda">La persona debe tener un usuario creado. Escribe su número de documento para continuar.</p>
+    <div class="grid">
+      <div class="campo">
+        <label for="docNuevo">* Número de identificación</label>
+        <input id="docNuevo" type="text" [(ngModel)]="documentoNuevo" name="docNuevo" required />
+      </div>
+    </div>
+    <div class="acciones-form"><button type="submit" class="primario">Continuar</button></div>
+  </form>
+
+  <!-- Paso 2 / edición: datos laborales -->
+  <form *ngIf="paso === 'formulario' && persona" (ngSubmit)="guardar()" class="formulario">
+    <h3>{{ modoEdicion ? "Editar empleado" : "Nuevo empleado · Datos laborales" }}</h3>
+    <div class="persona">
+      <div><span class="etiqueta">Nombre</span><span class="valor">{{ persona.nombre }}</span></div>
+      <div><span class="etiqueta">Documento</span><span class="valor">{{ nombreTipo(persona.tipoDocumento) }} {{ persona.numeroDocumento }}</span></div>
+      <div><span class="etiqueta">Género</span><span class="valor">{{ persona.genero || "—" }}</span></div>
+      <div><span class="etiqueta">Correo</span><span class="valor">{{ persona.correo }}</span></div>
+    </div>
+    <p class="ayuda">Los datos personales se modifican en el módulo Usuarios.</p>
+    <div class="grid">
+      <div class="campo"><label for="cargo">* Cargo</label><input id="cargo" type="text" [(ngModel)]="form.cargo" name="cargo" required /></div>
+      <div class="campo"><label for="area">* Área</label><input id="area" type="text" [(ngModel)]="form.area" name="area" required /></div>
+      <div class="campo"><label for="ingreso">* Fecha de ingreso</label><input id="ingreso" type="date" [(ngModel)]="form.fechaIngreso" name="ingreso" required /></div>
+      <div class="campo"><label for="salario">Salario básico mensual</label><input id="salario" type="number" min="0" [(ngModel)]="form.salario" name="salario" /></div>
+      <div class="campo"><label for="extras">Promedio de horas extras</label><input id="extras" type="number" min="0" [(ngModel)]="form.promedioHorasExtras" name="extras" /></div>
+    </div>
+    <div class="acciones-form">
+      <button type="submit" class="primario">{{ modoEdicion ? "Actualizar" : "Registrar" }}</button>
+      <button type="button" (click)="cancelar()">Cancelar</button>
+    </div>
+  </form>
+
+  <div class="carga-masiva">
+    <h3>📊 Carga masiva de empleados (Excel)</h3>
+    <p class="ayuda">
+      Descarga la plantilla, llénala (una fila por empleado) y súbela. Por cada fila se crea el usuario de acceso y el empleado.
+      Columnas: <code>tipoDocumento, numeroDocumento, primerNombre, segundoNombre, primerApellido, segundoApellido, genero, correo, contrasena, cargo, area, fechaIngreso, salario, promedioHorasExtras</code>.
+    </p>
+    <div class="fila-carga">
+      <button type="button" class="plantilla" (click)="descargarPlantilla()">⬇️ Descargar plantilla de Excel</button>
+    </div>
+    <div class="fila-carga">
+      <input type="file" accept=".xlsx" (change)="seleccionarArchivo($event)" />
+      <button type="button" (click)="cargarExcel()" [disabled]="cargandoExcel || !archivoSeleccionado">
+        {{ cargandoExcel ? "Procesando..." : "Cargar Excel" }}
+      </button>
+    </div>
+
+    <div class="resultado-carga" *ngIf="resultadoCarga">
+      <p><strong>{{ resultadoCarga.mensaje }}</strong></p>
+      <ul *ngIf="resultadoCarga.errores.length > 0" class="lista-errores">
+        <li *ngFor="let err of resultadoCarga.errores">{{ err }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <p *ngIf="cargando">Cargando empleados...</p>
+
+  <table class="tabla" *ngIf="!cargando">
+    <thead>
+      <tr><th>Documento</th><th>Nombre completo</th><th>Cargo</th><th>Área</th><th>Ingreso</th><th>Salario</th><th>Acciones</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let e of empleados">
+        <td>{{ e.tipo_documento || "CC" }} {{ e.numero_documento || e.cedula }}</td>
+        <td>{{ e.nombre }}</td>
+        <td>{{ e.cargo }}</td>
+        <td>{{ e.area }}</td>
+        <td>{{ e.fecha_ingreso | date:"yyyy-MM-dd" }}</td>
+        <td>{{ e.salario | currency:"COP":"symbol-narrow":"1.0-0" }}</td>
+        <td>
+          <button (click)="editar(e)">Editar</button>
+          <button (click)="eliminar(e)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,62 @@
+<div class="contenedor">
+  <h2>{{ authService.esAdministrador() ? "Gestión de Solicitudes" : "Mis Solicitudes" }}</h2>
+  <div *ngIf="mensaje" class="mensaje">{{ mensaje }}</div>
+
+  <form (ngSubmit)="crear()" class="formulario" *ngIf="!authService.esAdministrador()">
+    <h3>Nueva solicitud</h3>
+    <input type="text" [(ngModel)]="nuevaSolicitud.tipoSolicitud" name="tipoSolicitud" placeholder="Tipo (Permiso, Vacaciones...)" required />
+    <input type="text" [(ngModel)]="nuevaSolicitud.descripcion" name="descripcion" placeholder="Descripción" />
+    <button type="submit">Enviar solicitud</button>
+  </form>
+
+  <p *ngIf="cargando">Cargando solicitudes...</p>
+
+  <table class="tabla" *ngIf="!cargando">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th *ngIf="authService.esAdministrador()">Empleado</th>
+        <th>Tipo</th>
+        <th>Descripción</th>
+        <th>Estado</th>
+        <th>Respuesta</th>
+        <th>Fecha</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let s of solicitudes">
+        <td>{{ s.id_solicitud }}</td>
+        <td *ngIf="authService.esAdministrador()">{{ s.nombre_empleado }}<br /><small>{{ s.cedula_empleado }}</small></td>
+        <td>{{ s.tipo_solicitud }}</td>
+        <td>{{ s.descripcion }}</td>
+        <td>{{ ESTADOS[s.id_estado || 3] }}</td>
+        <td>{{ s.respuesta || "—" }}</td>
+        <td>{{ s.fecha_creacion | date:"dd/MM/yyyy hh:mm a" }}</td>
+        <td>
+          <ng-container *ngIf="authService.esAdministrador(); else soloEliminar">
+            <button (click)="cambiarEstado(s, 5)">Aprobar</button>
+            <button (click)="cambiarEstado(s, 4)">En revisión</button>
+            <button (click)="abrirRechazo(s)">Rechazar</button>
+            <button (click)="eliminar(s.id_solicitud)">Eliminar</button>
+          </ng-container>
+          <ng-template #soloEliminar>
+            <button (click)="eliminar(s.id_solicitud)" [disabled]="s.id_estado !== 3">Eliminar</button>
+          </ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="fondo-modal" *ngIf="rechazando" (click)="cancelarRechazo()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3>Rechazar solicitud #{{ rechazando.id_solicitud }}</h3>
+      <p>Escribe el motivo del rechazo. El empleado lo verá en su tabla de solicitudes.</p>
+      <textarea [(ngModel)]="motivo" name="motivo" rows="4" maxlength="1000" placeholder="Motivo del rechazo"></textarea>
+      <div class="acciones-modal">
+        <button type="button" class="secundario" (click)="cancelarRechazo()">Cancelar</button>
+        <button type="button" class="peligro" [disabled]="!motivo.trim()" (click)="confirmarRechazo()">Confirmar rechazo</button>
+      </div>
+    </div>
+  </div>
+</div>

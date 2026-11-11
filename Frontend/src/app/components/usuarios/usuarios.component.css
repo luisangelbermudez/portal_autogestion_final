@@ -1,0 +1,32 @@
+.contenedor { padding: 24px; font-family: Arial, sans-serif; color: #1a1a2e; }
+h2 { color: #0f3460; }
+.formulario { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: #f5f5f5; padding: 16px; border-radius: 8px; margin-bottom: 20px; }
+.formulario input, .formulario select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+.formulario button { background: #0f3460; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+.formulario button[type="button"] { background: #999; }
+.acciones-form { display: flex; gap: 8px; }
+.tabla { width: 100%; border-collapse: collapse; }
+.tabla th, .tabla td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+.tabla th { background: #0f3460; color: #f1c40f; }
+.tabla button { margin-right: 6px; padding: 4px 10px; border: none; border-radius: 4px; cursor: pointer; background: #f1c40f; }
+.mensaje { background: #d4edda; color: #155724; padding: 10px; border-radius: 4px; margin-bottom: 12px; }
+
+/* Formularios por pasos */
+.mensaje.error { background: #f8d7da; color: #721c24; }
+.mensaje .enlace { margin-left: 10px; background: none; border: none; color: #0f3460; text-decoration: underline; cursor: pointer; font-weight: 600; }
+.buscador { background: #fff; border: 1px solid #e3e7f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 16px; }
+.buscador label { display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 6px; }
+.buscador .fila { display: flex; gap: 8px; }
+.buscador input { flex: 1; max-width: 320px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+.buscador button { background: #0f3460; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+.formulario { display: block; }
+.formulario h3 { margin: 0 0 14px; color: #0f3460; }
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 24px; }
+.campo { display: flex; flex-direction: column; gap: 6px; }
+.campo label, .campo .etiqueta { font-weight: 700; font-size: 0.85rem; color: #1f4e79; }
+.campo input, .campo select { width: 100%; box-sizing: border-box; }
+.campo.fijo .valor { padding: 8px 0; color: #444; }
+.acciones-form { margin-top: 18px; justify-content: center; }
+.formulario button.primario { background: #2a86b3; }
+.formulario button[type="button"] { background: #999; }
+@media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }

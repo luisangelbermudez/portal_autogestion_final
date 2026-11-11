@@ -1,0 +1,31 @@
+<div class="contenedor">
+  <div class="tarjeta">
+    <div class="icono">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3M17 6l3 3M14 9l2 2"/></svg>
+    </div>
+    <h2>Cambiar contraseña</h2>
+    <p class="ayuda">Por tu seguridad, escribe tu contraseña actual y elige una nueva de mínimo 6 caracteres.</p>
+
+    <div class="mensaje" [class.error]="tipoMensaje === 'error'" *ngIf="mensaje">{{ mensaje }}</div>
+
+    <form (ngSubmit)="guardar()">
+      <label for="actual">Contraseña actual</label>
+      <input id="actual" name="actual" [type]="verClaves ? 'text' : 'password'" [(ngModel)]="actual" autocomplete="current-password" required />
+
+      <label for="nueva">Nueva contraseña</label>
+      <input id="nueva" name="nueva" [type]="verClaves ? 'text' : 'password'" [(ngModel)]="nueva" autocomplete="new-password" required />
+
+      <label for="confirmar">Confirmar nueva contraseña</label>
+      <input id="confirmar" name="confirmar" [type]="verClaves ? 'text' : 'password'" [(ngModel)]="confirmar" autocomplete="new-password" required />
+
+      <label class="ver"><input type="checkbox" [(ngModel)]="verClaves" name="verClaves" /> Mostrar contraseñas</label>
+
+      <div class="acciones">
+        <button type="button" class="secundario" (click)="volver()">Volver</button>
+        <button type="submit" class="primario" [disabled]="guardando || !actual || !nueva || !confirmar">
+          {{ guardando ? "Guardando..." : "Guardar contraseña" }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

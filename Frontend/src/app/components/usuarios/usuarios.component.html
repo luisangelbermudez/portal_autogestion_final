@@ -1,0 +1,109 @@
+<div class="contenedor">
+  <h2>Gestión de Usuarios</h2>
+
+  <div *ngIf="mensaje" class="mensaje" [class.error]="tipoMensaje === 'error'">
+    {{ mensaje }}
+    <button *ngIf="existente" type="button" class="enlace" (click)="editar(existente)">Editar este usuario</button>
+  </div>
+
+  <div class="buscador">
+    <label for="busqueda">Buscar usuario por número de documento</label>
+    <div class="fila">
+      <input id="busqueda" type="text" [(ngModel)]="busqueda" name="busqueda" placeholder="Ej. 1234567890" (keyup.enter)="buscar()" />
+      <button type="button" (click)="buscar()">Buscar</button>
+    </div>
+  </div>
+
+  <!-- Paso 1: identificación -->
+  <form *ngIf="!modoEdicion && paso === 'identificacion'" (ngSubmit)="continuar()" class="formulario">
+    <h3>Nuevo usuario · Identificación</h3>
+    <div class="grid">
+      <div class="campo">
+        <label for="tipoDoc">* Tipo de documento</label>
+        <select id="tipoDoc" [(ngModel)]="documentoTipo" name="tipoDoc">
+          <option *ngFor="let t of tiposDocumento" [value]="t.codigo">{{ t.nombre }}</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="numDoc">* Número de identificación</label>
+        <input id="numDoc" type="text" [(ngModel)]="documentoNumero" name="numDoc" required />
+      </div>
+    </div>
+    <div class="acciones-form">
+      <button type="submit" class="primario">Continuar</button>
+    </div>
+  </form>
+
+  <!-- Paso 2 / edición: resto de los datos -->
+  <form *ngIf="modoEdicion || paso === 'formulario'" (ngSubmit)="guardar()" class="formulario">
+    <h3>{{ modoEdicion ? "Editar usuario" : "Nuevo usuario · Datos personales" }}</h3>
+    <div class="grid">
+      <ng-container *ngIf="!modoEdicion || usuarioSeleccionado.numeroDocumento; else sinDocumento">
+        <div class="campo fijo"><span class="etiqueta">Tipo de documento</span><span class="valor">{{ nombreTipo(usuarioSeleccionado.tipoDocumento) }}</span></div>
+        <div class="campo fijo"><span class="etiqueta">Número de identificación</span><span class="valor">{{ usuarioSeleccionado.numeroDocumento }}</span></div>
+      </ng-container>
+      <ng-template #sinDocumento>
+        <div class="campo">
+          <label for="tdEd">* Tipo de documento</label>
+          <select id="tdEd" [(ngModel)]="usuarioSeleccionado.tipoDocumento" name="tdEd">
+            <option *ngFor="let t of tiposDocumento" [value]="t.codigo">{{ t.nombre }}</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="ndEd">* Número de identificación</label>
+          <input id="ndEd" type="text" [(ngModel)]="usuarioSeleccionado.numeroDocumento" name="ndEd" required />
+        </div>
+      </ng-template>
+
+      <div class="campo"><label for="pn">* Primer nombre</label><input id="pn" type="text" [(ngModel)]="usuarioSeleccionado.primerNombre" name="pn" required /></div>
+      <div class="campo"><label for="sn">Segundo nombre</label><input id="sn" type="text" [(ngModel)]="usuarioSeleccionado.segundoNombre" name="sn" /></div>
+      <div class="campo"><label for="pa">* Primer apellido</label><input id="pa" type="text" [(ngModel)]="usuarioSeleccionado.primerApellido" name="pa" required /></div>
+      <div class="campo"><label for="sa">Segundo apellido</label><input id="sa" type="text" [(ngModel)]="usuarioSeleccionado.segundoApellido" name="sa" /></div>
+      <div class="campo">
+        <label for="gen">* Género</label>
+        <select id="gen" [(ngModel)]="usuarioSeleccionado.genero" name="gen" required>
+          <option value="" disabled>Seleccione</option>
+          <option *ngFor="let g of generos" [value]="g">{{ g }}</option>
+        </select>
+      </div>
+      <div class="campo"><label for="correo">* Correo electrónico</label><input id="correo" type="email" [(ngModel)]="usuarioSeleccionado.correo" name="correo" required /></div>
+      <div class="campo">
+        <label for="clave">{{ modoEdicion ? "Nueva contraseña (opcional)" : "* Contraseña" }}</label>
+        <input id="clave" type="password" [(ngModel)]="usuarioSeleccionado.contrasena" name="clave" [required]="!modoEdicion" autocomplete="new-password" />
+      </div>
+      <div class="campo">
+        <label for="rol">* Rol</label>
+        <select id="rol" [(ngModel)]="usuarioSeleccionado.idRol" name="rol"><option [ngValue]="1">Administrador</option><option [ngValue]="2">Empleado</option></select>
+      </div>
+      <div class="campo">
+        <label for="estado">* Estado</label>
+        <select id="estado" [(ngModel)]="usuarioSeleccionado.idEstado" name="estado"><option [ngValue]="1">Activo</option><option [ngValue]="2">Inactivo</option></select>
+      </div>
+    </div>
+    <div class="acciones-form">
+      <button type="submit" class="primario">{{ modoEdicion ? "Actualizar" : "Guardar" }}</button>
+      <button type="button" (click)="cancelar()">Cancelar</button>
+    </div>
+  </form>
+
+  <p *ngIf="cargando">Cargando usuarios...</p>
+
+  <table class="tabla" *ngIf="!cargando">
+    <thead>
+      <tr><th>Documento</th><th>Nombre completo</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of usuarios">
+        <td>{{ u.tipoDocumento }} {{ u.numeroDocumento }}</td>
+        <td>{{ u.nombre }}</td>
+        <td>{{ u.correo }}</td>
+        <td>{{ u.idRol === 1 ? "Administrador" : "Empleado" }}</td>
+        <td>{{ u.idEstado === 1 ? "Activo" : "Inactivo" }}</td>
+        <td>
+          <button (click)="editar(u)">Editar</button>
+          <button (click)="eliminar(u)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

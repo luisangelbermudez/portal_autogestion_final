@@ -1,0 +1,28 @@
+<div class="tarjeta-perfil">
+  <div class="banda"></div>
+  <div class="cabecera-perfil">
+    <div class="avatar">{{ iniciales }}</div>
+    <div class="titulo-perfil">
+      <h3>{{ nombre | uppercase }}</h3>
+      <p class="cargo">{{ subtitulo }}</p>
+    </div>
+    <div class="sello-antiguedad" *ngIf="selloValor">
+      <span class="sello-valor">{{ selloValor }}</span>
+      <span class="sello-etiqueta">{{ selloEtiqueta }}</span>
+    </div>
+  </div>
+
+  <div class="datos-perfil">
+    <div class="dato" *ngFor="let d of datos">
+      <span class="dato-icono" [ngSwitch]="d.icono">
+        <ng-container *ngSwitchCase="'cedula'"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M14 10h4M14 14h4M6.5 16c.5-1.2 1.4-2 2.5-2s2 .8 2.5 2"/></svg></ng-container>
+        <ng-container *ngSwitchCase="'area'"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg></ng-container>
+        <ng-container *ngSwitchCase="'fecha'"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></ng-container>
+        <ng-container *ngSwitchCase="'reloj'"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></ng-container>
+        <ng-container *ngSwitchCase="'correo'"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></ng-container>
+        <ng-container *ngSwitchCase="'rol'"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></ng-container>
+      </span>
+      <span class="dato-texto"><span class="dato-etiqueta">{{ d.etiqueta }}</span><span class="dato-valor">{{ d.valor }}</span></span>
+    </div>
+  </div>
+</div>

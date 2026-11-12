@@ -15,7 +15,6 @@ import { Solicitud } from "../../models/solicitud.model";
   standalone: true,
   imports: [CommonModule, RouterLink, TarjetaPerfilComponent],
   templateUrl: "./dashboard.component.html",
-  styleUrl: "./dashboard.component.css",
 })
 export class DashboardComponent implements OnInit {
   // Datos comunes

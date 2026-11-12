@@ -21,7 +21,6 @@ interface OpcionCertificado {
   standalone: true,
   imports: [CommonModule, TarjetaPerfilComponent],
   templateUrl: "./certificados.component.html",
-  styleUrl: "./certificados.component.css",
 })
 export class CertificadosComponent implements OnInit {
   empleado: Empleado | null = null;

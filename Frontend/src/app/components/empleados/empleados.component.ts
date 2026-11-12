@@ -15,7 +15,6 @@ interface PersonaVista { nombre: string; correo: string; genero: string; tipoDoc
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: "./empleados.component.html",
-  styleUrl: "./empleados.component.css",
 })
 export class EmpleadosComponent implements OnInit {
   readonly nombreTipo = nombreTipoDocumento;

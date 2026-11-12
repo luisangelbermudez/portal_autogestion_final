@@ -11,7 +11,6 @@ import { EmpleadoService } from "../../services/empleado.service";
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: "./solicitudes.component.html",
-  styleUrl: "./solicitudes.component.css",
 })
 export class SolicitudesComponent implements OnInit {
   solicitudes: Solicitud[] = [];

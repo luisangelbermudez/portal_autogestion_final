@@ -1,30 +1,31 @@
-<div class="contenedor">
-  <div class="tarjeta">
-    <div class="icono">
+<div class="mx-auto max-w-lg animate-scale-in">
+  <div class="card">
+    <span class="mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-amber-50 text-amber-600 animate-float" aria-hidden="true">
       <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3M17 6l3 3M14 9l2 2"/></svg>
-    </div>
-    <h2>Cambiar contraseña</h2>
-    <p class="ayuda">Por tu seguridad, escribe tu contraseña actual y elige una nueva de mínimo 6 caracteres.</p>
+    </span>
+    <h1 class="titulo-pagina !text-2xl">Cambiar contraseña</h1>
+    <p class="ayuda mb-5 mt-1">Escribe tu contraseña actual y elige una nueva de mínimo 6 caracteres.</p>
 
-    <div class="mensaje" [class.error]="tipoMensaje === 'error'" *ngIf="mensaje">{{ mensaje }}</div>
+    <div class="alerta" [class.alerta-error]="tipoMensaje === 'error'" [attr.role]="tipoMensaje === 'error' ? 'alert' : 'status'" *ngIf="mensaje">{{ mensaje }}</div>
 
-    <form (ngSubmit)="guardar()">
-      <label for="actual">Contraseña actual</label>
-      <input id="actual" name="actual" [type]="verClaves ? 'text' : 'password'" [(ngModel)]="actual" autocomplete="current-password" required />
+    <form (ngSubmit)="guardar()" class="space-y-4">
+      <div>
+        <label class="label" for="actual">Contraseña actual</label>
+        <input id="actual" class="input" name="actual" [type]="verClaves ? 'text' : 'password'" [(ngModel)]="actual" autocomplete="current-password" required />
+      </div>
+      <div>
+        <label class="label" for="nueva">Nueva contraseña</label>
+        <input id="nueva" class="input" name="nueva" [type]="verClaves ? 'text' : 'password'" [(ngModel)]="nueva" autocomplete="new-password" required />
+      </div>
+      <div>
+        <label class="label" for="confirmar">Confirmar nueva contraseña</label>
+        <input id="confirmar" class="input" name="confirmar" [type]="verClaves ? 'text' : 'password'" [(ngModel)]="confirmar" autocomplete="new-password" required />
+      </div>
+      <label class="flex min-h-[44px] cursor-pointer items-center gap-2.5 text-sm font-medium"><input type="checkbox" [(ngModel)]="verClaves" name="verClaves" /> Mostrar contraseñas</label>
 
-      <label for="nueva">Nueva contraseña</label>
-      <input id="nueva" name="nueva" [type]="verClaves ? 'text' : 'password'" [(ngModel)]="nueva" autocomplete="new-password" required />
-
-      <label for="confirmar">Confirmar nueva contraseña</label>
-      <input id="confirmar" name="confirmar" [type]="verClaves ? 'text' : 'password'" [(ngModel)]="confirmar" autocomplete="new-password" required />
-
-      <label class="ver"><input type="checkbox" [(ngModel)]="verClaves" name="verClaves" /> Mostrar contraseñas</label>
-
-      <div class="acciones">
-        <button type="button" class="secundario" (click)="volver()">Volver</button>
-        <button type="submit" class="primario" [disabled]="guardando || !actual || !nueva || !confirmar">
-          {{ guardando ? "Guardando..." : "Guardar contraseña" }}
-        </button>
+      <div class="flex flex-col-reverse justify-end gap-2 pt-2 sm:flex-row">
+        <button type="button" class="btn-secundario" (click)="volver()">Volver</button>
+        <button type="submit" class="btn-primario" [disabled]="guardando || !actual || !nueva || !confirmar">{{ guardando ? "Guardando…" : "Guardar contraseña" }}</button>
       </div>
     </form>
   </div>

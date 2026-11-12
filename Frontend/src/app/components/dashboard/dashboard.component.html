@@ -1,83 +1,96 @@
-<div class="contenedor">
+<div class="mx-auto max-w-7xl">
+  <header class="mb-6 animate-fade-up">
+    <h1 class="titulo-pagina">Hola, {{ (usuario?.nombre || "").split(" ")[0] }}</h1>
+    <p class="subtitulo-pagina">{{ authService.esAdministrador() ? "Este es el resumen de la plataforma." : "Aquí puedes ver el estado de tus trámites." }}</p>
+  </header>
 
-  <!-- Tarjeta de perfil (misma de Certificados) -->
   <app-tarjeta-perfil [nombre]="usuario?.nombre || ''" [subtitulo]="subtituloPerfil" [selloValor]="selloPerfil" [datos]="datosPerfil"></app-tarjeta-perfil>
 
-  <!-- Tarjetas de estadísticas -->
-  <div class="fila-stats" *ngIf="!cargando">
+  <!-- Estadísticas -->
+  <section class="mb-6 grid gap-4 sm:grid-cols-3" *ngIf="!cargando" aria-label="Resumen">
     <ng-container *ngIf="!authService.esAdministrador(); else statsAdmin">
-      <div class="stat-card amarillo">
-        <div class="numero">{{ totalSolicitudes }}</div>
-        <div class="etiqueta">Total solicitudes</div>
+      <div class="card card-hover relative overflow-hidden animate-fade-up [animation-delay:100ms]">
+        <span class="absolute inset-x-0 top-0 h-1.5 bg-amber"></span>
+        <p class="text-4xl font-extrabold text-navy-800">{{ totalSolicitudes }}</p>
+        <p class="mt-1 text-sm font-semibold text-ink-muted">Total de solicitudes</p>
       </div>
-      <div class="stat-card verde">
-        <div class="numero">{{ solicitudesAtendidas }}</div>
-        <div class="etiqueta">Atendidas</div>
+      <div class="card card-hover relative overflow-hidden animate-fade-up [animation-delay:200ms]">
+        <span class="absolute inset-x-0 top-0 h-1.5 bg-ok"></span>
+        <p class="text-4xl font-extrabold text-ok-dark">{{ solicitudesAtendidas }}</p>
+        <p class="mt-1 text-sm font-semibold text-ink-muted">Atendidas</p>
       </div>
-      <div class="stat-card rojo">
-        <div class="numero">{{ solicitudesPendientes }}</div>
-        <div class="etiqueta">Pendientes</div>
+      <div class="card card-hover relative overflow-hidden animate-fade-up [animation-delay:300ms]">
+        <span class="absolute inset-x-0 top-0 h-1.5 bg-err"></span>
+        <p class="text-4xl font-extrabold text-err-dark">{{ solicitudesPendientes }}</p>
+        <p class="mt-1 text-sm font-semibold text-ink-muted">Pendientes</p>
       </div>
     </ng-container>
-
     <ng-template #statsAdmin>
-      <div class="stat-card amarillo">
-        <div class="numero">{{ totalUsuarios }}</div>
-        <div class="etiqueta">Usuarios</div>
+      <div class="card card-hover relative overflow-hidden animate-fade-up [animation-delay:100ms]">
+        <span class="absolute inset-x-0 top-0 h-1.5 bg-amber"></span>
+        <p class="text-4xl font-extrabold text-navy-800">{{ totalUsuarios }}</p>
+        <p class="mt-1 text-sm font-semibold text-ink-muted">Usuarios</p>
       </div>
-      <div class="stat-card verde">
-        <div class="numero">{{ totalEmpleados }}</div>
-        <div class="etiqueta">Empleados</div>
+      <div class="card card-hover relative overflow-hidden animate-fade-up [animation-delay:200ms]">
+        <span class="absolute inset-x-0 top-0 h-1.5 bg-ok"></span>
+        <p class="text-4xl font-extrabold text-ok-dark">{{ totalEmpleados }}</p>
+        <p class="mt-1 text-sm font-semibold text-ink-muted">Empleados</p>
       </div>
-      <div class="stat-card rojo">
-        <div class="numero">{{ totalSolicitudesPendientesAdmin }}</div>
-        <div class="etiqueta">Solicitudes pendientes</div>
+      <div class="card card-hover relative overflow-hidden animate-fade-up [animation-delay:300ms]">
+        <span class="absolute inset-x-0 top-0 h-1.5 bg-err"></span>
+        <p class="text-4xl font-extrabold text-err-dark">{{ totalSolicitudesPendientesAdmin }}</p>
+        <p class="mt-1 text-sm font-semibold text-ink-muted">Solicitudes pendientes</p>
       </div>
     </ng-template>
-  </div>
+  </section>
 
   <!-- Accesos rápidos -->
-  <div class="accesos-rapidos">
-    <h3>⚡ Accesos rápidos</h3>
-    <div class="botones">
+  <section class="card mb-6 animate-fade-up [animation-delay:350ms]" aria-labelledby="h-accesos">
+    <h2 class="titulo-seccion" id="h-accesos">Accesos rápidos</h2>
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       <ng-container *ngIf="!authService.esAdministrador(); else botonesAdmin">
-        <a routerLink="/certificados" class="boton navy">📄 Generar Certificado Laboral</a>
-        <a routerLink="/solicitudes" class="boton rojo">📁 Nueva Solicitud</a>
-        <a routerLink="/solicitudes" class="boton verde">📋 Ver Mis Solicitudes</a>
+        <a routerLink="/certificados" class="btn-primario justify-start">Generar certificado laboral</a>
+        <a routerLink="/solicitudes" class="btn-acento justify-start">Crear una solicitud</a>
+        <a routerLink="/solicitudes" class="btn-secundario justify-start">Ver mis solicitudes</a>
       </ng-container>
       <ng-template #botonesAdmin>
-        <a routerLink="/usuarios" class="boton navy">➕ Nuevo usuario</a>
-        <a routerLink="/empleados" class="boton verde">➕ Nuevo empleado</a>
-        <a routerLink="/solicitudes" class="boton rojo">📁 Ver solicitudes</a>
-        <a routerLink="/certificados" class="boton morado">📄 Mis certificados</a>
+        <a routerLink="/usuarios" class="btn-primario justify-start">Crear usuario</a>
+        <a routerLink="/empleados" class="btn-exito justify-start">Registrar empleado</a>
+        <a routerLink="/solicitudes" class="btn-acento justify-start">Revisar solicitudes</a>
+        <a routerLink="/certificados" class="btn-secundario justify-start">Mis certificados</a>
       </ng-template>
     </div>
-  </div>
+  </section>
 
-  <!-- Últimas solicitudes (solo empleado) -->
-  <div class="ultimas-solicitudes" *ngIf="!authService.esAdministrador()">
-    <h3>📄 Mis últimas solicitudes</h3>
-    <table class="tabla" *ngIf="misSolicitudes.length > 0; else sinSolicitudes">
-      <thead>
-        <tr><th>Tipo</th><th>Descripción</th><th>Estado</th><th>Fecha</th></tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let s of misSolicitudes">
-          <td>{{ s.tipo_solicitud }}</td>
-          <td>{{ s.descripcion }}</td>
-          <td>
-            <span class="estado" [ngClass]="{
-              'estado-aprobado': s.id_estado === 5,
-              'estado-rechazado': s.id_estado === 6,
-              'estado-pendiente': s.id_estado === 3 || s.id_estado === 4
-            }">{{ ESTADOS[s.id_estado || 3] }}</span>
-          </td>
-          <td>{{ s.fecha_creacion | date:"dd/MM/yyyy hh:mm a" }}</td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- Últimas solicitudes (empleado) -->
+  <section *ngIf="!authService.esAdministrador()" class="animate-fade-up [animation-delay:450ms]" aria-labelledby="h-ultimas">
+    <h2 class="titulo-seccion" id="h-ultimas">Mis últimas solicitudes</h2>
+    <div class="tabla-wrap" *ngIf="misSolicitudes.length > 0; else sinSolicitudes">
+      <table class="tabla">
+        <caption class="sr-only">Mis últimas solicitudes</caption>
+        <thead><tr><th scope="col">Tipo</th><th scope="col">Descripción</th><th scope="col">Estado</th><th scope="col">Fecha</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let s of misSolicitudes">
+            <td class="font-semibold">{{ s.tipo_solicitud }}</td>
+            <td>{{ s.descripcion }}</td>
+            <td>
+              <span [ngClass]="{
+                'insignia-ok': s.id_estado === 5,
+                'insignia-err': s.id_estado === 6,
+                'insignia-warn': s.id_estado === 3 || s.id_estado === 4
+              }">{{ ESTADOS[s.id_estado || 3] }}</span>
+            </td>
+            <td class="whitespace-nowrap">{{ s.fecha_creacion | date:"dd/MM/yyyy hh:mm a" }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <ng-template #sinSolicitudes>
-      <p class="vacio">Aún no has enviado solicitudes.</p>
+      <div class="vacio">
+        <strong class="text-base text-navy-800">Aún no tienes solicitudes</strong>
+        <span>Cuando envíes una, podrás seguir su estado aquí.</span>
+        <a routerLink="/solicitudes" class="btn-primario mt-2">Crear mi primera solicitud</a>
+      </div>
     </ng-template>
-  </div>
+  </section>
 </div>

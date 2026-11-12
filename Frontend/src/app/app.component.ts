@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, HostListener } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } from "@angular/router";
 import { filter } from "rxjs";
@@ -9,16 +9,18 @@ import { AuthService } from "./services/auth.service";
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: "./app.component.html",
-  styleUrl: "./app.component.css",
 })
 export class AppComponent {
   title = "Portal de Autogestión";
   mostrarNav = false;
+  menuAbierto = false;
+  readonly anio = new Date().getFullYear();
 
   constructor(public authService: AuthService, private router: Router) {
     this.actualizarNav();
     this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe(() => {
       this.actualizarNav();
+      this.menuAbierto = false;
     });
   }
 
@@ -37,6 +39,11 @@ export class AppComponent {
 
   actualizarNav(): void {
     this.mostrarNav = this.authService.estaAutenticado() && this.router.url !== "/login";
+  }
+
+  @HostListener("document:keydown.escape")
+  cerrarMenu(): void {
+    this.menuAbierto = false;
   }
 
   cerrarSesion(): void {

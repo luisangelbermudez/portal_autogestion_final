@@ -1,74 +1,74 @@
-<nav class="barra-nav">
-  <span class="marca">Portal de <span class="acento">Autogestión</span></span>
-</nav>
+<div class="grid min-h-screen lg:grid-cols-[1.25fr_1fr]">
+  <!-- Carrusel -->
+  <section class="on-dark relative order-2 min-h-[320px] overflow-hidden bg-navy-900 lg:order-1" aria-roledescription="carrusel" aria-label="Novedades del portal"
+           (mouseenter)="pausado = true" (mouseleave)="pausado = false" (focusin)="pausado = true" (focusout)="pausado = false">
+    <div class="absolute inset-0 animate-gradient bg-[length:300%_300%] bg-gradient-to-br from-navy-950 via-navy-700 to-navy-900"></div>
 
-<main class="hero">
-  <div class="carrusel">
-    <div
-      class="slide"
-      *ngFor="let img of imagenes; let i = index"
-      [class.activo]="i === indiceActual"
-    >
-      <img [src]="img.src" [alt]="img.titulo" class="imagen-fondo" />
-      <div class="overlay">
-        <div class="etiqueta">{{ img.etiqueta }}</div>
-        <div class="titulo">{{ img.titulo }}</div>
-        <div class="descripcion">{{ img.descripcion }}</div>
+    <div *ngFor="let img of imagenes; let i = index" class="absolute inset-0 transition-opacity duration-1000"
+         [ngClass]="i === indiceActual ? 'opacity-100' : 'pointer-events-none opacity-0'"
+         role="group" aria-roledescription="diapositiva" [attr.aria-label]="(i + 1) + ' de ' + imagenes.length" [attr.aria-hidden]="i !== indiceActual">
+      <img [src]="img.src" alt="" class="h-full w-full object-cover opacity-40 mix-blend-luminosity" [ngClass]="i === indiceActual ? 'scale-100' : 'scale-110'" style="transition: transform 6s ease-out" />
+      <div class="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-900/50 to-transparent"></div>
+      <div class="absolute inset-x-0 bottom-0 p-6 pb-16 sm:p-10 sm:pb-20" *ngIf="i === indiceActual">
+        <span class="inline-block animate-fade-up rounded-full bg-amber px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-navy-900">{{ img.etiqueta }}</span>
+        <h2 class="mt-4 max-w-xl animate-fade-up text-3xl font-extrabold leading-tight text-white [animation-delay:120ms] sm:text-5xl">{{ img.titulo }}</h2>
+        <p class="mt-3 max-w-lg animate-fade-up text-base text-white/90 [animation-delay:240ms] sm:text-lg">{{ img.descripcion }}</p>
       </div>
     </div>
 
-    <button type="button" class="flecha flecha-izq" (click)="anterior()" aria-label="Anterior">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    <div class="pointer-events-none absolute -left-10 top-10 h-40 w-40 animate-float rounded-full bg-amber/20 blur-2xl"></div>
+    <div class="pointer-events-none absolute right-10 top-1/3 h-56 w-56 animate-float-slow rounded-full bg-navy-600/30 blur-3xl"></div>
+
+    <button type="button" (click)="anterior()" aria-label="Diapositiva anterior"
+            class="absolute left-4 top-1/2 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-white/30 bg-navy-900/60 text-white backdrop-blur transition hover:scale-110 hover:bg-navy-900">
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
     </button>
-    <button type="button" class="flecha flecha-der" (click)="siguiente()" aria-label="Siguiente">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    <button type="button" (click)="siguiente()" aria-label="Diapositiva siguiente"
+            class="absolute right-4 top-1/2 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-white/30 bg-navy-900/60 text-white backdrop-blur transition hover:scale-110 hover:bg-navy-900">
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
     </button>
 
-    <div class="puntos">
-      <button
-        type="button"
-        *ngFor="let img of imagenes; let i = index"
-        class="punto"
-        [class.activo]="i === indiceActual"
-        (click)="irA(i)"
-        [attr.aria-label]="'Ir a la imagen ' + (i + 1)"
-      ></button>
+    <div class="absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-1" role="group" aria-label="Seleccionar diapositiva">
+      <button type="button" *ngFor="let img of imagenes; let i = index" (click)="irA(i)"
+              [attr.aria-label]="'Ir a la diapositiva ' + (i + 1)" [attr.aria-current]="i === indiceActual ? 'true' : null"
+              class="grid h-11 min-w-[28px] place-items-center px-1.5">
+        <span class="block h-2 rounded-full transition-all duration-500" [ngClass]="i === indiceActual ? 'w-8 bg-amber' : 'w-2 bg-white/50'"></span>
+      </button>
     </div>
-  </div>
+  </section>
 
-  <aside class="panel-lateral">
-    <div class="encabezado-panel">
-      <div class="marco-logo">
-        <img class="logo" src="assets/imagenes/portal-autogestion.jpg" alt="Portal de Autogestión" />
+  <!-- Formulario -->
+  <aside class="order-1 flex flex-col justify-center px-5 py-10 sm:px-12 lg:order-2">
+    <div class="mx-auto w-full max-w-md animate-fade-up">
+      <div class="mb-8 text-center">
+        <div class="mx-auto mb-4 w-full max-w-[280px] overflow-hidden rounded-2xl border border-ink-soft bg-white shadow-card">
+          <img src="assets/imagenes/portal-autogestion.jpg" alt="Portal de Autogestión" class="block h-auto w-full" />
+        </div>
+        <h1 class="text-3xl font-extrabold tracking-tight text-navy-800">Bienvenido de nuevo</h1>
+        <p class="mt-1 text-ink-muted">Ingresa con tu correo para gestionar tus solicitudes y certificados.</p>
       </div>
-      <p>Sistema de gestión de solicitudes</p>
-    </div>
 
-    <div class="tarjeta">
-      <div class="titulo-tarjeta">Iniciar Sesión</div>
-      <div class="cuerpo-tarjeta">
-        <div class="campo">
-          <label for="correo">Correo electrónico</label>
-          <input id="correo" type="email" [(ngModel)]="correo" name="correo" placeholder="usuario@correo.com" />
+      <form class="card flex flex-col gap-5" (ngSubmit)="ingresar()" novalidate aria-labelledby="titulo-login">
+        <h2 class="sr-only" id="titulo-login">Iniciar sesión</h2>
+        <div>
+          <label class="label" for="correo">Correo electrónico</label>
+          <input id="correo" class="input" type="email" [(ngModel)]="correo" name="correo" placeholder="nombre@empresa.com" autocomplete="username" required
+                 [attr.aria-invalid]="error ? true : null" [attr.aria-describedby]="error ? 'error-login' : null" />
         </div>
-        <div class="campo">
-          <label for="contrasena">Contraseña</label>
-          <input id="contrasena" type="password" [(ngModel)]="contrasena" name="contrasena" placeholder="********"
-                 (keyup.enter)="ingresar()" />
+        <div>
+          <label class="label" for="contrasena">Contraseña</label>
+          <input id="contrasena" class="input" type="password" [(ngModel)]="contrasena" name="contrasena" placeholder="Tu contraseña" autocomplete="current-password" required
+                 [attr.aria-invalid]="error ? true : null" [attr.aria-describedby]="error ? 'error-login' : null" />
         </div>
-        <div class="error" *ngIf="error">{{ error }}</div>
-        <button class="boton-primario" (click)="ingresar()" [disabled]="cargando">
-          {{ cargando ? "Ingresando..." : "Ingresar" }}
+        <div class="alerta alerta-error !mb-0" id="error-login" role="alert" *ngIf="error">{{ error }}</div>
+        <button type="submit" class="btn-primario w-full !min-h-[50px] text-base" [disabled]="cargando" [attr.aria-busy]="cargando">
+          {{ cargando ? "Ingresando…" : "Ingresar" }}
         </button>
-      </div>
+      </form>
+
+      <p class="mt-6 text-center text-xs text-ink-muted">
+        <span class="sr-only">Contacto: </span>(+57) 301 2952356 · Calle 15 #5-23, Bogotá<br />Portal de Autogestión © 2026
+      </p>
     </div>
   </aside>
-</main>
-
-<footer class="pie">
-  <div class="contacto">
-    <span>(+57) 301 2952356</span>
-    <span>Calle 15 #5-23, Bogotá</span>
-  </div>
-  <div class="derechos">Portal de Autogestión &copy; 2026</div>
-</footer>
+</div>

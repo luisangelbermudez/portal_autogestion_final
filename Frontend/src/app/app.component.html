@@ -1,56 +1,85 @@
-<header class="encabezado" *ngIf="mostrarNav">
-  <a routerLink="/" class="marca">
-    <span class="logo-marca">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>
-    </span>
-    <span class="texto-marca">Portal de <span class="acento">Autogestión</span></span>
-  </a>
+<a href="#contenido" class="fixed left-3 top-[-60px] z-[300] rounded-lg bg-white px-4 py-2.5 font-bold text-navy-800 shadow-lg focus:top-3">Saltar al contenido</a>
 
-  <nav class="menu" *ngIf="authService.esAdministrador()">
-    <a routerLink="/usuarios" routerLinkActive="activo" class="enlace-nav">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
-      <span>Usuarios</span>
-    </a>
-    <a routerLink="/empleados" routerLinkActive="activo" class="enlace-nav">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-      <span>Empleados</span>
-    </a>
-    <a routerLink="/solicitudes" routerLinkActive="activo" class="enlace-nav">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
-      <span>Solicitudes</span>
-    </a>
-    <a routerLink="/certificados" routerLinkActive="activo" class="enlace-nav">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M8.5 12.5 7 22l5-3 5 3-1.5-9.5"/></svg>
-      <span>Certificados</span>
-    </a>
-  </nav>
-
-  <div class="zona-usuario" *ngIf="usuario">
-    <div class="chip-usuario">
-      <span class="avatar-mini">{{ iniciales }}</span>
-      <span class="datos-usuario">
-        <strong>{{ usuario.nombre }}</strong>
-        <small>{{ rol }}</small>
-      </span>
-    </div>
-    <a routerLink="/cambiar-contrasena" routerLinkActive="activo" class="boton-clave" title="Cambiar contraseña" aria-label="Cambiar contraseña">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3M17 6l3 3M14 9l2 2"/></svg>
-    </a>
-    <button type="button" class="boton-salir" (click)="cerrarSesion()">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
-      <span>{{ authService.esAdministrador() ? "Salir" : "Cerrar sesión" }}</span>
+<!-- Barra superior móvil -->
+  <header *ngIf="mostrarNav" class="on-dark sticky top-0 z-40 flex h-16 items-center justify-between bg-navy-900 px-4 text-white shadow-lg lg:hidden">
+    <button type="button" class="grid h-11 w-11 place-items-center rounded-xl hover:bg-white/10" (click)="menuAbierto = true" aria-label="Abrir menú" aria-controls="menu-lateral" [attr.aria-expanded]="menuAbierto">
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
-  </div>
-</header>
+    <a routerLink="/" class="block h-11 overflow-hidden rounded-lg ring-1 ring-white/25" aria-label="Portal de Autogestión, inicio"><img src="assets/imagenes/portal-autogestion.jpg" alt="Portal de Autogestión" class="h-full w-auto" /></a>
+    <span class="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-amber-300 to-amber text-sm font-extrabold text-navy-900" aria-hidden="true">{{ iniciales }}</span>
+  </header>
 
-<main>
-  <router-outlet />
-</main>
+  <!-- Fondo del menú en móvil -->
+  <div *ngIf="mostrarNav && menuAbierto" class="fixed inset-0 z-40 animate-fade-in bg-navy-950/60 backdrop-blur-sm lg:hidden" (click)="menuAbierto = false" aria-hidden="true"></div>
 
-<footer class="pie" *ngIf="mostrarNav && authService.esAdministrador()">
-  <div class="contacto">
-    <span>Portal de Autogestión © 2026</span>
-    <span>📞 (+57) 301 2952356</span>
-    <span>📍 Calle 15 #5-23, Bogotá, Colombia</span>
-  </div>
-</footer>
+  <!-- Menú lateral -->
+  <aside *ngIf="mostrarNav" id="menu-lateral" class="on-dark fixed inset-y-0 left-0 z-50 flex w-72 flex-col overflow-hidden bg-gradient-to-b from-navy-900 via-navy-800 to-navy-950 text-white shadow-2xl transition-[transform,visibility] duration-300 lg:visible lg:translate-x-0"
+       [ngClass]="menuAbierto ? 'visible translate-x-0' : 'invisible -translate-x-full'">
+    <div class="pointer-events-none absolute -right-16 -top-16 h-56 w-56 animate-float-slow rounded-full bg-navy-600/30 blur-2xl"></div>
+    <div class="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 animate-float rounded-full bg-amber/10 blur-2xl"></div>
+
+    <div class="relative flex items-center gap-3 px-5 pb-4 pt-6">
+      <a routerLink="/" class="block min-w-0 flex-1 overflow-hidden rounded-2xl ring-1 ring-white/25 shadow-[0_8px_24px_-6px_rgba(0,0,0,.55)] transition duration-300 hover:scale-[1.02] hover:ring-amber/70" aria-label="Portal de Autogestión, inicio">
+        <img src="assets/imagenes/portal-autogestion.jpg" alt="Portal de Autogestión" class="block h-auto w-full" />
+      </a>
+      <button type="button" class="grid h-10 w-10 place-items-center rounded-lg hover:bg-white/10 lg:hidden" (click)="menuAbierto = false" aria-label="Cerrar menú">
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+
+    <nav class="relative flex-1 space-y-1 overflow-y-auto px-4 py-4" aria-label="Navegación principal">
+      <p class="mb-2 px-3.5 text-[11px] font-bold uppercase tracking-[.14em] text-white/55">Menú</p>
+      <a routerLink="/" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page" class="nav-link animate-slide-right">
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        <span>Inicio</span>
+      </a>
+      <ng-container *ngIf="authService.esAdministrador()">
+        <a routerLink="/usuarios" routerLinkActive="activo" ariaCurrentWhenActive="page" class="nav-link animate-slide-right [animation-delay:60ms]">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+          <span>Usuarios</span>
+        </a>
+        <a routerLink="/empleados" routerLinkActive="activo" ariaCurrentWhenActive="page" class="nav-link animate-slide-right [animation-delay:120ms]">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          <span>Empleados</span>
+        </a>
+      </ng-container>
+      <a routerLink="/solicitudes" routerLinkActive="activo" ariaCurrentWhenActive="page" class="nav-link animate-slide-right [animation-delay:180ms]">
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
+        <span>Solicitudes</span>
+      </a>
+      <a routerLink="/certificados" routerLinkActive="activo" ariaCurrentWhenActive="page" class="nav-link animate-slide-right [animation-delay:240ms]">
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M8.5 12.5 7 22l5-3 5 3-1.5-9.5"/></svg>
+        <span>Certificados</span>
+      </a>
+    </nav>
+
+    <div class="relative m-4 rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur" *ngIf="usuario">
+      <div class="flex items-center gap-3">
+        <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-gradient-to-br from-amber-300 to-amber font-extrabold text-navy-900 animate-ring" aria-hidden="true">{{ iniciales }}</span>
+        <span class="min-w-0 leading-tight">
+          <strong class="block truncate text-sm">{{ usuario.nombre }}</strong>
+          <small class="text-[11px] font-bold uppercase tracking-wider text-amber-300">{{ rol }}</small>
+        </span>
+      </div>
+      <div class="mt-3 grid grid-cols-2 gap-2">
+        <a routerLink="/cambiar-contrasena" routerLinkActive="activo" class="inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-lg border border-white/25 text-xs font-bold transition hover:bg-white/15">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3M17 6l3 3M14 9l2 2"/></svg>Contraseña
+        </a>
+        <button type="button" (click)="cerrarSesion()" class="inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-lg border border-red-200/50 text-xs font-bold text-red-100 transition hover:border-err hover:bg-err hover:text-white">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Salir
+        </button>
+      </div>
+    </div>
+  </aside>
+
+<div class="flex min-h-screen flex-col" [ngClass]="mostrarNav ? 'lg:pl-72' : ''">
+  <main id="contenido" tabindex="-1" class="flex-1 focus:outline-none" [ngClass]="mostrarNav ? 'px-4 py-6 sm:px-8 sm:py-8' : ''">
+    <router-outlet />
+  </main>
+  <footer *ngIf="mostrarNav" class="border-t border-ink-soft bg-white px-4 py-4 text-xs text-ink-muted sm:px-8">
+    <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-1">
+      <span>Portal de Autogestión © {{ anio }}</span>
+      <span><span class="sr-only">Teléfono: </span>(+57) 301 2952356 · <span class="sr-only">Dirección: </span>Calle 15 #5-23, Bogotá, Colombia</span>
+    </div>
+  </footer>
+</div>

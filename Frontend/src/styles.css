@@ -1,1 +1,66 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { @apply bg-lienzo font-sans text-ink antialiased; }
+  h1, h2, h3 { text-wrap: balance; }
+  :focus-visible { @apply outline-none ring-2 ring-navy-700 ring-offset-2 ring-offset-white rounded-md; }
+  .on-dark :focus-visible { @apply ring-white ring-offset-navy-900; }
+  ::placeholder { @apply text-slate-500; }
+  input[type="checkbox"] { @apply h-5 w-5 rounded accent-navy-700; }
+}
+
+@layer components {
+  /* Superficies */
+  .card { @apply rounded-2xl border border-ink-soft bg-white p-5 shadow-card sm:p-6; }
+  .card-hover { @apply transition duration-300 hover:-translate-y-1 hover:shadow-lift; }
+  .titulo-pagina { @apply text-2xl font-extrabold tracking-tight text-navy-800 sm:text-3xl; }
+  .subtitulo-pagina { @apply mt-1 text-sm text-ink-muted; }
+  .titulo-seccion { @apply mb-4 flex items-center gap-2 text-lg font-bold text-navy-800 before:h-5 before:w-1.5 before:rounded-full before:bg-amber; }
+
+  /* Formularios */
+  .label { @apply mb-1.5 block text-sm font-semibold text-slate-800; }
+  .input { @apply min-h-[46px] w-full rounded-xl border border-slate-400 bg-white px-3.5 py-2.5 text-[15px] text-ink transition duration-200 hover:border-navy-700 focus:border-navy-700 focus:ring-2 focus:ring-navy-700/30 focus:outline-none; }
+  .input.ng-invalid.ng-touched { @apply border-err; }
+  .ayuda { @apply text-sm text-ink-muted; }
+
+  /* Botones */
+  .btn { @apply relative inline-flex min-h-[44px] select-none items-center justify-center gap-2 overflow-hidden rounded-xl px-5 py-2.5 text-sm font-bold transition duration-200 active:scale-[.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100; }
+  .btn-primario { @apply btn bg-navy-700 text-white shadow-md shadow-navy-700/25 hover:-translate-y-0.5 hover:bg-navy-800 hover:shadow-lg; }
+  .btn-secundario { @apply btn border border-slate-300 bg-white text-slate-800 hover:border-navy-700 hover:text-navy-800; }
+  .btn-exito { @apply btn bg-ok text-white hover:-translate-y-0.5 hover:bg-ok-dark; }
+  .btn-peligro { @apply btn bg-err text-white hover:-translate-y-0.5 hover:bg-err-dark; }
+  .btn-acento { @apply btn bg-amber text-navy-900 shadow-md shadow-amber/30 hover:-translate-y-0.5 hover:bg-amber-300; }
+  .btn-mini { @apply inline-flex min-h-[36px] items-center rounded-lg border border-slate-300 bg-white px-3 text-[13px] font-bold text-navy-800 transition hover:border-navy-800 hover:bg-navy-800 hover:text-white disabled:cursor-not-allowed disabled:opacity-40; }
+  .btn-mini-peligro { @apply btn-mini hover:!border-err hover:!bg-err; }
+
+  /* Avisos y estados */
+  .alerta { @apply mb-4 flex items-start gap-3 rounded-xl border border-ok/30 bg-ok-bg px-4 py-3 text-sm font-medium text-ok-dark animate-scale-in; }
+  .alerta-error { @apply border-err/30 bg-err-bg text-err-dark; }
+  .insignia { @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-bold before:h-1.5 before:w-1.5 before:rounded-full before:bg-current; }
+  .insignia-ok { @apply insignia bg-ok-bg text-ok-dark; }
+  .insignia-err { @apply insignia bg-err-bg text-err-dark; }
+  .insignia-warn { @apply insignia bg-amber-50 text-amber-800; }
+  .vacio { @apply flex flex-col items-center gap-2 rounded-xl border border-dashed border-slate-300 bg-navy-50/60 px-4 py-10 text-center text-sm text-ink-muted; }
+
+  /* Tablas */
+  .tabla-wrap { @apply overflow-x-auto rounded-2xl border border-ink-soft bg-white shadow-card; }
+  .tabla { @apply w-full min-w-[760px] border-collapse text-left text-sm; }
+  .tabla th { @apply whitespace-nowrap bg-navy-900 px-4 py-3 text-xs font-bold uppercase tracking-wider text-white; }
+  .tabla td { @apply border-b border-slate-100 px-4 py-3.5 align-top; }
+  .tabla tbody tr { @apply transition-colors hover:bg-navy-50; }
+  .tabla tbody tr:last-child td { @apply border-b-0; }
+
+  /* Enlaces del menú lateral */
+  .nav-link { @apply relative flex min-h-[44px] items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-white/80 transition duration-200 hover:translate-x-1 hover:bg-white/10 hover:text-white; }
+  .nav-link.activo { @apply bg-white/15 text-white shadow-inner; }
+  .nav-link.activo::before { content: ""; @apply absolute -left-3 top-2 bottom-2 w-1.5 rounded-r-full bg-amber; }
+  .nav-link.activo svg { @apply text-amber; }
+}
+
+/* Reduce el movimiento si el usuario lo pide (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}

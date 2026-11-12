@@ -1,20 +1,22 @@
-<div class="tarjeta-perfil">
-  <div class="banda"></div>
-  <div class="cabecera-perfil">
-    <div class="avatar">{{ iniciales }}</div>
-    <div class="titulo-perfil">
-      <h3>{{ nombre | uppercase }}</h3>
-      <p class="cargo">{{ subtitulo }}</p>
+<section class="mb-6 grid animate-fade-up overflow-hidden rounded-2xl border border-ink-soft bg-white shadow-card md:grid-cols-[minmax(240px,320px)_1fr]" aria-label="Perfil">
+  <!-- Panel de identidad: nada se superpone, todo vive en su propio bloque -->
+  <div class="on-dark relative flex flex-col items-center justify-center gap-3 overflow-hidden bg-gradient-to-br from-navy-900 via-navy-800 to-navy-700 p-6 text-center text-white md:items-start md:text-left">
+    <div class="pointer-events-none absolute -right-10 -top-10 h-40 w-40 animate-float-slow rounded-full bg-white/10 blur-xl"></div>
+    <div class="pointer-events-none absolute -bottom-12 left-6 h-32 w-32 animate-float rounded-full bg-amber/20 blur-2xl"></div>
+    <span class="relative grid h-20 w-20 place-items-center rounded-full bg-gradient-to-br from-amber-300 to-amber text-2xl font-extrabold tracking-wide text-navy-900 shadow-lg animate-ring" aria-hidden="true">{{ iniciales }}</span>
+    <div class="relative min-w-0">
+      <h2 class="break-words text-lg font-extrabold uppercase leading-snug tracking-wide">{{ nombre }}</h2>
+      <p class="mt-1 text-sm font-medium text-white/85">{{ subtitulo }}</p>
     </div>
-    <div class="sello-antiguedad" *ngIf="selloValor">
-      <span class="sello-valor">{{ selloValor }}</span>
-      <span class="sello-etiqueta">{{ selloEtiqueta }}</span>
+    <div *ngIf="selloValor" class="relative mt-1 inline-flex items-baseline gap-2 rounded-full bg-white/15 px-4 py-1.5 backdrop-blur">
+      <span class="text-base font-extrabold text-amber-300">{{ selloValor }}</span>
+      <span class="text-[11px] font-semibold uppercase tracking-wider text-white/80">{{ selloEtiqueta }}</span>
     </div>
   </div>
 
-  <div class="datos-perfil">
-    <div class="dato" *ngFor="let d of datos">
-      <span class="dato-icono" [ngSwitch]="d.icono">
+  <dl class="grid content-center gap-x-6 gap-y-5 p-6 sm:grid-cols-2 xl:grid-cols-3">
+    <div class="flex min-w-0 items-center gap-3" *ngFor="let d of datos; let i = index" [style.animation-delay.ms]="120 + i * 70" style="animation: fade-up .5s both">
+      <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-amber-50 text-amber-600" [ngSwitch]="d.icono" aria-hidden="true">
         <ng-container *ngSwitchCase="'cedula'"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M14 10h4M14 14h4M6.5 16c.5-1.2 1.4-2 2.5-2s2 .8 2.5 2"/></svg></ng-container>
         <ng-container *ngSwitchCase="'area'"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg></ng-container>
         <ng-container *ngSwitchCase="'fecha'"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></ng-container>
@@ -22,7 +24,10 @@
         <ng-container *ngSwitchCase="'correo'"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></ng-container>
         <ng-container *ngSwitchCase="'rol'"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></ng-container>
       </span>
-      <span class="dato-texto"><span class="dato-etiqueta">{{ d.etiqueta }}</span><span class="dato-valor">{{ d.valor }}</span></span>
+      <div class="min-w-0">
+        <dt class="text-[11px] font-bold uppercase tracking-wider text-ink-muted">{{ d.etiqueta }}</dt>
+        <dd class="break-words text-sm font-semibold text-slate-900">{{ d.valor }}</dd>
+      </div>
     </div>
-  </div>
-</div>
+  </dl>
+</section>

@@ -10,7 +10,6 @@ import { GENEROS, TIPOS_DOCUMENTO, nombreTipoDocumento } from "../../models/cata
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: "./usuarios.component.html",
-  styleUrl: "./usuarios.component.css",
 })
 export class UsuariosComponent implements OnInit {
   readonly tiposDocumento = TIPOS_DOCUMENTO;

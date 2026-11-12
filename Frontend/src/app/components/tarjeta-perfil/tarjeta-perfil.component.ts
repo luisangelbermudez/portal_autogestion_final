@@ -14,7 +14,6 @@ export interface DatoPerfil {
   standalone: true,
   imports: [CommonModule],
   templateUrl: "./tarjeta-perfil.component.html",
-  styleUrl: "./tarjeta-perfil.component.css",
 })
 export class TarjetaPerfilComponent {
   @Input() nombre = "";

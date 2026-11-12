@@ -159,121 +159,133 @@ function formatearMoneda(valor) {
 
 const RUTA_LOGO = path.join(__dirname, "..", "..", "assets", "portal-autogestion.jpg");
 const AZUL = "#0F2F80";
+const AZUL_OSCURO = "#0A2266";
+const AZUL_CLARO = "#EEF3FF";
 const DORADO = "#EF9F27";
-const GRIS_TEXTO = "#333333";
-const GRIS_CLARO = "#777777";
+const GRIS_TEXTO = "#2B3042";
+const GRIS_CLARO = "#6B7390";
 
 function generarPdfCertificado(rutaArchivo, { consecutivo, empleado, tipoCarta }) {
   return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({ margin: 0, size: "LETTER" });
+    const doc = new PDFDocument({ margin: 0, size: "LETTER", info: { Title: `Certificación laboral N.° ${consecutivo}`, Author: "Portal de Autogestión" } });
     const stream = fs.createWriteStream(rutaArchivo);
     doc.pipe(stream);
 
-    const anchoPagina = doc.page.width;
-    const margenLateral = 55;
-    const anchoContenido = anchoPagina - margenLateral * 2;
+    const W = doc.page.width;
+    const H = doc.page.height;
+    const margen = 56;
+    const ancho = W - margen * 2;
 
-    // ===== Encabezado con el banner del portal =====
-    const altoEncabezado = 110;
-    doc.rect(0, 0, anchoPagina, altoEncabezado).fill("#FFFFFF");
+    // ===== Marca de agua: anillos concéntricos muy tenues =====
+    doc.save().opacity(0.045).lineWidth(26).circle(W / 2, H / 2 + 20, 210).stroke(AZUL)
+      .lineWidth(8).circle(W / 2, H / 2 + 20, 245).stroke(DORADO).restore();
+
+    // ===== Encabezado azul con logo y título =====
+    const altoEnc = 124;
+    doc.rect(0, 0, W, altoEnc).fill(AZUL_OSCURO);
+    doc.save().rect(0, 0, W, altoEnc).clip().opacity(0.12).circle(W - 40, -10, 120).fill("#FFFFFF").circle(W - 150, altoEnc + 20, 70).fill(DORADO).restore();
+    doc.roundedRect(margen - 6, 22, 226, 80, 10).fill("#FFFFFF");
     if (fs.existsSync(RUTA_LOGO)) {
-      doc.image(RUTA_LOGO, 0, 0, { fit: [anchoPagina, altoEncabezado], align: "center", valign: "center" });
+      doc.image(RUTA_LOGO, margen - 2, 26, { fit: [218, 72], align: "center", valign: "center" });
     } else {
-      doc.fillColor(AZUL).font("Helvetica-Bold").fontSize(22)
-        .text("PORTAL DE AUTOGESTIÓN", 0, 40, { align: "center", width: anchoPagina });
+      doc.fillColor(AZUL).font("Helvetica-Bold").fontSize(14).text("PORTAL DE AUTOGESTIÓN", margen, 54, { width: 214, align: "center" });
     }
+    const xTitulo = margen + 240;
+    const anchoTitulo = W - margen - xTitulo;
+    doc.fillColor(DORADO).font("Helvetica-Bold").fontSize(9).text("DOCUMENTO OFICIAL", xTitulo, 34, { width: anchoTitulo, align: "right", characterSpacing: 2.5 });
+    doc.fillColor("#FFFFFF").font("Helvetica-Bold").fontSize(23).text("CERTIFICACIÓN", xTitulo, 50, { width: anchoTitulo, align: "right" });
+    doc.text("LABORAL", xTitulo, 76, { width: anchoTitulo, align: "right" });
+    doc.rect(0, altoEnc, W, 5).fill(DORADO);
 
-    // Línea dorada decorativa bajo el encabezado
-    doc.rect(0, altoEncabezado, anchoPagina, 5).fill(DORADO);
+    // ===== Consecutivo y fecha =====
+    let y = altoEnc + 28;
+    const etiquetaNum = `N.° ${consecutivo}`;
+    doc.font("Helvetica-Bold").fontSize(10);
+    const anchoNum = doc.widthOfString(etiquetaNum) + 24;
+    doc.roundedRect(margen, y - 4, anchoNum, 22, 11).fill(AZUL_CLARO);
+    doc.fillColor(AZUL).text(etiquetaNum, margen, y + 2, { width: anchoNum, align: "center" });
+    doc.font("Helvetica").fontSize(10).fillColor(GRIS_CLARO)
+      .text(`Bogotá D.C., ${formatearFechaLarga(new Date())}`, margen, y + 2, { width: ancho, align: "right" });
+    y += 38;
 
-    // ===== Título del certificado =====
-    doc.fillColor(GRIS_TEXTO);
-    let y = altoEncabezado + 35;
-    doc.font("Helvetica-Bold").fontSize(15).fillColor(AZUL)
-      .text("CERTIFICACIÓN LABORAL", margenLateral, y, { align: "center", width: anchoContenido });
-    y += 24;
-
-    const subtitulos = {
-      todos: null,
-      sin_basico: "(sin salario básico)",
-      con_extras: "(con horas extras)",
-    };
+    const subtitulos = { todos: null, sin_basico: "Sin salario básico", con_extras: "Con promedio de horas extras" };
     if (subtitulos[tipoCarta]) {
-      doc.font("Helvetica-Oblique").fontSize(10).fillColor(GRIS_CLARO)
-        .text(subtitulos[tipoCarta], margenLateral, y, { align: "center", width: anchoContenido });
-      y += 16;
+      doc.font("Helvetica-Oblique").fontSize(10).fillColor(GRIS_CLARO).text(subtitulos[tipoCarta], margen, y - 6, { width: ancho, align: "center" });
+      y += 12;
     }
 
-    doc.font("Helvetica").fontSize(10).fillColor(GRIS_TEXTO)
-      .text(`Consecutivo N.° ${consecutivo}`, margenLateral, y, { align: "center", width: anchoContenido });
-    y += 14;
-    doc.text(`Bogotá D.C., ${formatearFechaLarga(new Date())}`, margenLateral, y, { align: "center", width: anchoContenido });
+    // ===== Saludo y presentación =====
+    doc.font("Helvetica-Bold").fontSize(12).fillColor(AZUL).text("A quien pueda interesar:", margen, y, { width: ancho });
+    y += 26;
+    doc.font("Helvetica").fontSize(11).fillColor(GRIS_TEXTO)
+      .text("El Portal de Autogestión certifica que el/la señor(a):", margen, y, { width: ancho });
     y += 34;
 
-    // ===== Cuerpo del certificado =====
-    doc.x = margenLateral;
-    doc.y = y;
+    // ===== Nombre destacado =====
+    doc.font("Helvetica-Bold").fontSize(21).fillColor(AZUL).text(String(empleado.nombre || "").toUpperCase(), margen, y, { width: ancho, align: "center" });
+    y = doc.y + 6;
+    doc.rect(W / 2 - 40, y, 80, 3).fill(DORADO);
+    y += 14;
+    doc.font("Helvetica").fontSize(11).fillColor(GRIS_TEXTO)
+      .text(`identificado(a) con cédula de ciudadanía N.° ${empleado.cedula}`, margen, y, { width: ancho, align: "center" });
+    y += 36;
 
-    doc.font("Helvetica-Bold").fontSize(11).fillColor(AZUL).text("A quien pueda interesar:", { width: anchoContenido });
-    doc.moveDown(0.6);
-    doc.font("Helvetica").fontSize(10.5).fillColor(GRIS_TEXTO).text(
-      "El Portal de Autogestión certifica que el/la señor(a):",
-      { align: "justify", width: anchoContenido }
-    );
-    doc.moveDown(0.8);
-
-    // Recuadro con los datos del empleado
-    const inicioRecuadro = doc.y;
+    // ===== Datos laborales =====
     const campos = [
-      ["Nombre completo", empleado.nombre],
-      ["Cédula de ciudadanía", empleado.cedula],
       ["Cargo", empleado.cargo],
       ["Área / Departamento", empleado.area],
       ["Fecha de ingreso", formatearFechaCorta(empleado.fecha_ingreso)],
     ];
     if (tipoCarta === "todos") campos.push(["Salario básico mensual", formatearMoneda(empleado.salario)]);
-    if (tipoCarta === "con_extras") campos.push(["Promedio de horas extras (últimos 3 meses)", `${empleado.promedio_horas_extras} horas`]);
+    if (tipoCarta === "con_extras") campos.push(["Promedio horas extras (3 meses)", `${empleado.promedio_horas_extras} horas`]);
 
-    const altoFila = 20;
-    const altoRecuadro = campos.length * altoFila + 16;
-    doc.roundedRect(margenLateral, inicioRecuadro, anchoContenido, altoRecuadro, 5)
-      .fillAndStroke("#F5F7FC", "#DCE3F5");
-
-    let yCampo = inicioRecuadro + 10;
-    campos.forEach(([etiqueta, valor]) => {
-      doc.font("Helvetica-Bold").fontSize(10).fillColor(AZUL)
-        .text(`${etiqueta}:`, margenLateral + 14, yCampo, { continued: false, width: 220 });
-      doc.font("Helvetica").fontSize(10).fillColor(GRIS_TEXTO)
-        .text(valor, margenLateral + 240, yCampo, { width: anchoContenido - 254 });
-      yCampo += altoFila;
+    const altoFila = 28;
+    const altoCard = campos.length * altoFila;
+    doc.roundedRect(margen, y, ancho, altoCard, 8).fill("#F7F9FE");
+    campos.forEach(([etiqueta, valor], i) => {
+      const yf = y + i * altoFila;
+      if (i % 2 === 1) doc.save().rect(margen + 5, yf, ancho - 5, altoFila).fill("#EEF3FF").restore();
+      doc.font("Helvetica-Bold").fontSize(9.5).fillColor(GRIS_CLARO)
+        .text(etiqueta.toUpperCase(), margen + 20, yf + 10, { width: 230, characterSpacing: 0.4 });
+      doc.font("Helvetica-Bold").fontSize(11).fillColor(GRIS_TEXTO)
+        .text(String(valor), margen + 262, yf + 8.5, { width: ancho - 276 });
     });
+    doc.roundedRect(margen, y, 5, altoCard, 2.5).fill(DORADO);
+    y += altoCard + 28;
 
-    doc.x = margenLateral;
-    doc.y = inicioRecuadro + altoRecuadro + 18;
-
-    const clausulaSalario = tipoCarta === "todos"
-      ? ", devengando el salario básico mensual indicado"
-      : "";
-
-    doc.font("Helvetica").fontSize(10.5).fillColor(GRIS_TEXTO).text(
+    // ===== Cláusulas =====
+    const clausulaSalario = tipoCarta === "todos" ? ", devengando el salario básico mensual indicado" : "";
+    doc.font("Helvetica").fontSize(11).fillColor(GRIS_TEXTO).text(
       `Se certifica que el/la empleado(a) se encuentra activo(a) en nuestra empresa${clausulaSalario} ` +
       "con todos los beneficios de ley del Código Sustantivo del Trabajo de Colombia.",
-      { align: "justify", width: anchoContenido }
+      margen, y, { align: "justify", width: ancho, lineGap: 3 }
     );
-    doc.moveDown(0.6);
-    doc.text("La presente certificación se expide con veracidad y es válida a la fecha indicada.", { align: "justify", width: anchoContenido });
+    doc.moveDown(0.7);
+    doc.text("La presente certificación se expide con veracidad y es válida a la fecha indicada.", margen, doc.y, { align: "justify", width: ancho, lineGap: 3 });
 
-    doc.moveDown(3);
-    doc.fillColor(GRIS_TEXTO).text("______________________________", { width: anchoContenido });
-    doc.font("Helvetica-Bold").fillColor(AZUL).text("Recursos Humanos — Portal de Autogestión", { width: anchoContenido });
-    doc.font("Helvetica").fontSize(9).fillColor(GRIS_CLARO).text("Firma autorizada / Sello empresa", { width: anchoContenido });
+    // ===== Firma y sello =====
+    const yFirma = H - 170;
+    doc.moveTo(margen, yFirma).lineTo(margen + 230, yFirma).lineWidth(1).stroke(AZUL);
+    doc.font("Helvetica-Bold").fontSize(11).fillColor(AZUL).text("Recursos Humanos", margen, yFirma + 8, { width: 260 });
+    doc.font("Helvetica").fontSize(9.5).fillColor(GRIS_CLARO)
+      .text("Portal de Autogestión", margen, yFirma + 23, { width: 260 })
+      .text("Firma autorizada / Sello empresa", margen, yFirma + 36, { width: 260 });
 
-    // ===== Pie de página con franja azul =====
-    const altoPie = 34;
-    doc.rect(0, doc.page.height - altoPie, anchoPagina, altoPie).fill(AZUL);
-    doc.fontSize(8).fillColor("#D8E1FA").text(
-      `Portal de Autogestión © ${new Date().getFullYear()} | Documento generado electrónicamente | Consecutivo N.° ${consecutivo}`,
-      margenLateral, doc.page.height - altoPie + 12, { align: "center", width: anchoContenido }
+    const cx = W - margen - 48;
+    const cy = yFirma - 6;
+    doc.lineWidth(3).circle(cx, cy, 46).stroke(DORADO).lineWidth(1).circle(cx, cy, 39).stroke(AZUL);
+    doc.circle(cx, cy, 34).fill(AZUL_CLARO);
+    doc.lineWidth(3).lineCap("round").lineJoin("round").moveTo(cx - 12, cy - 6).lineTo(cx - 4, cy + 3).lineTo(cx + 12, cy - 15).stroke(DORADO);
+    doc.font("Helvetica-Bold").fontSize(8).fillColor(AZUL).text("DOCUMENTO", cx - 34, cy + 9, { width: 68, align: "center", characterSpacing: 1 });
+    doc.text("VÁLIDO", cx - 34, cy + 20, { width: 68, align: "center", characterSpacing: 1.5 });
+
+    // ===== Pie de página =====
+    const altoPie = 40;
+    doc.rect(0, H - altoPie - 4, W, 4).fill(DORADO);
+    doc.rect(0, H - altoPie, W, altoPie).fill(AZUL_OSCURO);
+    doc.font("Helvetica").fontSize(8).fillColor("#D8E1FA").text(
+      `Portal de Autogestión © ${new Date().getFullYear()}  ·  Documento generado electrónicamente  ·  Consecutivo N.° ${consecutivo}`,
+      margen, H - altoPie + 15, { align: "center", width: ancho }
     );
 
     doc.end();
@@ -282,4 +294,4 @@ function generarPdfCertificado(rutaArchivo, { consecutivo, empleado, tipoCarta }
   });
 }
 
-module.exports = { listarOConsultar, generar };
+module.exports = { listarOConsultar, generar, generarPdfCertificado };

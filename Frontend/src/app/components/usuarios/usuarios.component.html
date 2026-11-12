@@ -1,109 +1,113 @@
-<div class="contenedor">
-  <h2>Gestión de Usuarios</h2>
+<div class="mx-auto max-w-7xl">
+  <header class="mb-6 animate-fade-up">
+    <h1 class="titulo-pagina">Gestión de usuarios</h1>
+    <p class="subtitulo-pagina">Crea cuentas de acceso, edítalas o desactívalas.</p>
+  </header>
 
-  <div *ngIf="mensaje" class="mensaje" [class.error]="tipoMensaje === 'error'">
-    {{ mensaje }}
-    <button *ngIf="existente" type="button" class="enlace" (click)="editar(existente)">Editar este usuario</button>
+  <div *ngIf="mensaje" class="alerta" [class.alerta-error]="tipoMensaje === 'error'" [attr.role]="tipoMensaje === 'error' ? 'alert' : 'status'">
+    <span>{{ mensaje }}</span>
+    <button *ngIf="existente" type="button" class="font-bold underline" (click)="editar(existente)">Editar este usuario</button>
   </div>
 
-  <div class="buscador">
-    <label for="busqueda">Buscar usuario por número de documento</label>
-    <div class="fila">
-      <input id="busqueda" type="text" [(ngModel)]="busqueda" name="busqueda" placeholder="Ej. 1234567890" (keyup.enter)="buscar()" />
-      <button type="button" (click)="buscar()">Buscar</button>
+  <section class="card mb-6 animate-fade-up [animation-delay:60ms]" aria-label="Buscar usuario">
+    <label class="label" for="busqueda">Buscar por número de documento</label>
+    <div class="flex flex-wrap gap-2">
+      <input id="busqueda" class="input max-w-sm flex-1" type="text" [(ngModel)]="busqueda" name="busqueda" placeholder="Ej. 1234567890" (keyup.enter)="buscar()" />
+      <button type="button" class="btn-primario" (click)="buscar()">Buscar</button>
     </div>
-  </div>
+  </section>
 
-  <!-- Paso 1: identificación -->
-  <form *ngIf="!modoEdicion && paso === 'identificacion'" (ngSubmit)="continuar()" class="formulario">
-    <h3>Nuevo usuario · Identificación</h3>
-    <div class="grid">
-      <div class="campo">
-        <label for="tipoDoc">* Tipo de documento</label>
-        <select id="tipoDoc" [(ngModel)]="documentoTipo" name="tipoDoc">
+  <!-- Paso 1 -->
+  <form *ngIf="!modoEdicion && paso === 'identificacion'" (ngSubmit)="continuar()" class="card mb-6 animate-scale-in">
+    <h2 class="titulo-seccion">Nuevo usuario · Identificación</h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div>
+        <label class="label" for="tipoDoc">Tipo de documento *</label>
+        <select id="tipoDoc" class="input" [(ngModel)]="documentoTipo" name="tipoDoc">
           <option *ngFor="let t of tiposDocumento" [value]="t.codigo">{{ t.nombre }}</option>
         </select>
       </div>
-      <div class="campo">
-        <label for="numDoc">* Número de identificación</label>
-        <input id="numDoc" type="text" [(ngModel)]="documentoNumero" name="numDoc" required />
+      <div>
+        <label class="label" for="numDoc">Número de identificación *</label>
+        <input id="numDoc" class="input" type="text" [(ngModel)]="documentoNumero" name="numDoc" required />
       </div>
     </div>
-    <div class="acciones-form">
-      <button type="submit" class="primario">Continuar</button>
-    </div>
+    <div class="mt-6 flex justify-end"><button type="submit" class="btn-primario">Continuar</button></div>
   </form>
 
-  <!-- Paso 2 / edición: resto de los datos -->
-  <form *ngIf="modoEdicion || paso === 'formulario'" (ngSubmit)="guardar()" class="formulario">
-    <h3>{{ modoEdicion ? "Editar usuario" : "Nuevo usuario · Datos personales" }}</h3>
-    <div class="grid">
+  <!-- Paso 2 / edición -->
+  <form *ngIf="modoEdicion || paso === 'formulario'" (ngSubmit)="guardar()" class="card mb-6 animate-scale-in">
+    <h2 class="titulo-seccion">{{ modoEdicion ? "Editar usuario" : "Nuevo usuario · Datos personales" }}</h2>
+    <div class="grid gap-4 sm:grid-cols-2">
       <ng-container *ngIf="!modoEdicion || usuarioSeleccionado.numeroDocumento; else sinDocumento">
-        <div class="campo fijo"><span class="etiqueta">Tipo de documento</span><span class="valor">{{ nombreTipo(usuarioSeleccionado.tipoDocumento) }}</span></div>
-        <div class="campo fijo"><span class="etiqueta">Número de identificación</span><span class="valor">{{ usuarioSeleccionado.numeroDocumento }}</span></div>
+        <div class="rounded-xl bg-navy-50 px-4 py-3"><span class="block text-xs font-bold uppercase tracking-wider text-ink-muted">Tipo de documento</span><span class="font-semibold">{{ nombreTipo(usuarioSeleccionado.tipoDocumento) }}</span></div>
+        <div class="rounded-xl bg-navy-50 px-4 py-3"><span class="block text-xs font-bold uppercase tracking-wider text-ink-muted">Número de identificación</span><span class="font-semibold">{{ usuarioSeleccionado.numeroDocumento }}</span></div>
       </ng-container>
       <ng-template #sinDocumento>
-        <div class="campo">
-          <label for="tdEd">* Tipo de documento</label>
-          <select id="tdEd" [(ngModel)]="usuarioSeleccionado.tipoDocumento" name="tdEd">
+        <div>
+          <label class="label" for="tdEd">Tipo de documento *</label>
+          <select id="tdEd" class="input" [(ngModel)]="usuarioSeleccionado.tipoDocumento" name="tdEd">
             <option *ngFor="let t of tiposDocumento" [value]="t.codigo">{{ t.nombre }}</option>
           </select>
         </div>
-        <div class="campo">
-          <label for="ndEd">* Número de identificación</label>
-          <input id="ndEd" type="text" [(ngModel)]="usuarioSeleccionado.numeroDocumento" name="ndEd" required />
+        <div>
+          <label class="label" for="ndEd">Número de identificación *</label>
+          <input id="ndEd" class="input" type="text" [(ngModel)]="usuarioSeleccionado.numeroDocumento" name="ndEd" required />
         </div>
       </ng-template>
 
-      <div class="campo"><label for="pn">* Primer nombre</label><input id="pn" type="text" [(ngModel)]="usuarioSeleccionado.primerNombre" name="pn" required /></div>
-      <div class="campo"><label for="sn">Segundo nombre</label><input id="sn" type="text" [(ngModel)]="usuarioSeleccionado.segundoNombre" name="sn" /></div>
-      <div class="campo"><label for="pa">* Primer apellido</label><input id="pa" type="text" [(ngModel)]="usuarioSeleccionado.primerApellido" name="pa" required /></div>
-      <div class="campo"><label for="sa">Segundo apellido</label><input id="sa" type="text" [(ngModel)]="usuarioSeleccionado.segundoApellido" name="sa" /></div>
-      <div class="campo">
-        <label for="gen">* Género</label>
-        <select id="gen" [(ngModel)]="usuarioSeleccionado.genero" name="gen" required>
-          <option value="" disabled>Seleccione</option>
+      <div><label class="label" for="pn">Primer nombre *</label><input id="pn" class="input" type="text" [(ngModel)]="usuarioSeleccionado.primerNombre" name="pn" required /></div>
+      <div><label class="label" for="sn">Segundo nombre</label><input id="sn" class="input" type="text" [(ngModel)]="usuarioSeleccionado.segundoNombre" name="sn" /></div>
+      <div><label class="label" for="pa">Primer apellido *</label><input id="pa" class="input" type="text" [(ngModel)]="usuarioSeleccionado.primerApellido" name="pa" required /></div>
+      <div><label class="label" for="sa">Segundo apellido</label><input id="sa" class="input" type="text" [(ngModel)]="usuarioSeleccionado.segundoApellido" name="sa" /></div>
+      <div>
+        <label class="label" for="gen">Género *</label>
+        <select id="gen" class="input" [(ngModel)]="usuarioSeleccionado.genero" name="gen" required>
+          <option value="" disabled>Selecciona una opción</option>
           <option *ngFor="let g of generos" [value]="g">{{ g }}</option>
         </select>
       </div>
-      <div class="campo"><label for="correo">* Correo electrónico</label><input id="correo" type="email" [(ngModel)]="usuarioSeleccionado.correo" name="correo" required /></div>
-      <div class="campo">
-        <label for="clave">{{ modoEdicion ? "Nueva contraseña (opcional)" : "* Contraseña" }}</label>
-        <input id="clave" type="password" [(ngModel)]="usuarioSeleccionado.contrasena" name="clave" [required]="!modoEdicion" autocomplete="new-password" />
+      <div><label class="label" for="correo">Correo electrónico *</label><input id="correo" class="input" type="email" [(ngModel)]="usuarioSeleccionado.correo" name="correo" required /></div>
+      <div>
+        <label class="label" for="clave">{{ modoEdicion ? "Nueva contraseña (opcional)" : "Contraseña *" }}</label>
+        <input id="clave" class="input" type="password" [(ngModel)]="usuarioSeleccionado.contrasena" name="clave" [required]="!modoEdicion" autocomplete="new-password" />
       </div>
-      <div class="campo">
-        <label for="rol">* Rol</label>
-        <select id="rol" [(ngModel)]="usuarioSeleccionado.idRol" name="rol"><option [ngValue]="1">Administrador</option><option [ngValue]="2">Empleado</option></select>
+      <div>
+        <label class="label" for="rol">Rol *</label>
+        <select id="rol" class="input" [(ngModel)]="usuarioSeleccionado.idRol" name="rol"><option [ngValue]="1">Administrador</option><option [ngValue]="2">Empleado</option></select>
       </div>
-      <div class="campo">
-        <label for="estado">* Estado</label>
-        <select id="estado" [(ngModel)]="usuarioSeleccionado.idEstado" name="estado"><option [ngValue]="1">Activo</option><option [ngValue]="2">Inactivo</option></select>
+      <div>
+        <label class="label" for="estado">Estado *</label>
+        <select id="estado" class="input" [(ngModel)]="usuarioSeleccionado.idEstado" name="estado"><option [ngValue]="1">Activo</option><option [ngValue]="2">Inactivo</option></select>
       </div>
     </div>
-    <div class="acciones-form">
-      <button type="submit" class="primario">{{ modoEdicion ? "Actualizar" : "Guardar" }}</button>
-      <button type="button" (click)="cancelar()">Cancelar</button>
+    <div class="mt-6 flex flex-col-reverse justify-end gap-2 sm:flex-row">
+      <button type="button" class="btn-secundario" (click)="cancelar()">Cancelar</button>
+      <button type="submit" class="btn-primario">{{ modoEdicion ? "Guardar cambios" : "Crear usuario" }}</button>
     </div>
   </form>
 
-  <p *ngIf="cargando">Cargando usuarios...</p>
+  <p *ngIf="cargando" role="status" class="vacio">Cargando usuarios…</p>
 
-  <table class="tabla" *ngIf="!cargando">
-    <thead>
-      <tr><th>Documento</th><th>Nombre completo</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let u of usuarios">
-        <td>{{ u.tipoDocumento }} {{ u.numeroDocumento }}</td>
-        <td>{{ u.nombre }}</td>
-        <td>{{ u.correo }}</td>
-        <td>{{ u.idRol === 1 ? "Administrador" : "Empleado" }}</td>
-        <td>{{ u.idEstado === 1 ? "Activo" : "Inactivo" }}</td>
-        <td>
-          <button (click)="editar(u)">Editar</button>
-          <button (click)="eliminar(u)">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="tabla-wrap animate-fade-up [animation-delay:120ms]" *ngIf="!cargando">
+    <table class="tabla">
+      <caption class="sr-only">Listado de usuarios</caption>
+      <thead><tr><th scope="col">Documento</th><th scope="col">Nombre completo</th><th scope="col">Correo</th><th scope="col">Rol</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let u of usuarios">
+          <td class="whitespace-nowrap">{{ u.tipoDocumento }} {{ u.numeroDocumento }}</td>
+          <td class="min-w-[170px] font-semibold">{{ u.nombre }}</td>
+          <td class="min-w-[210px] break-words">{{ u.correo }}</td>
+          <td>{{ u.idRol === 1 ? "Administrador" : "Empleado" }}</td>
+          <td><span [ngClass]="u.idEstado === 1 ? 'insignia-ok' : 'insignia-err'">{{ u.idEstado === 1 ? "Activo" : "Inactivo" }}</span></td>
+          <td>
+            <div class="flex flex-wrap gap-1.5">
+              <button type="button" class="btn-mini" (click)="editar(u)" [attr.aria-label]="'Editar ' + u.nombre">Editar</button>
+              <button type="button" class="btn-mini-peligro" (click)="eliminar(u)" [attr.aria-label]="'Eliminar ' + u.nombre">Eliminar</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

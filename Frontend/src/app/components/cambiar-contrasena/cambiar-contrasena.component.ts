@@ -9,7 +9,6 @@ import { AuthService } from "../../services/auth.service";
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: "./cambiar-contrasena.component.html",
-  styleUrl: "./cambiar-contrasena.component.css",
 })
 export class CambiarContrasenaComponent {
   actual = "";

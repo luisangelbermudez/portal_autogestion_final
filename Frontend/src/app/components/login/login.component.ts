@@ -9,7 +9,6 @@ import { AuthService } from "../../services/auth.service";
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: "./login.component.html",
-  styleUrl: "./login.component.css",
 })
 export class LoginComponent implements OnInit, OnDestroy {
   correo = "";
@@ -24,12 +23,15 @@ export class LoginComponent implements OnInit, OnDestroy {
     { src: "assets/imagenes/portal3.JPG", etiqueta: "Certificados al instante", titulo: "Genera tus certificados laborales", descripcion: "Descárgalos en PDF o recíbelos directamente en tu correo, en segundos." },
   ];
   indiceActual = 0;
+  pausado = false;
   private intervalo: any;
 
   constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.intervalo = setInterval(() => this.siguiente(), 5000);
+    const reducido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    this.pausado = reducido;
+    this.intervalo = setInterval(() => { if (!this.pausado) this.siguiente(); }, 5000);
     if (this.route.snapshot.queryParamMap.get("expirada")) {
       this.error = "Tu sesión expiró. Inicia sesión nuevamente.";
     }
